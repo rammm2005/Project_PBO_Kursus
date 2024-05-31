@@ -1,6 +1,6 @@
 
-import Admin.LoginGuru;
-import User.LoginSiswa;
+import Admin.Auth.LogingGuru;
+import User.Auth.LoginSiswa;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -48,7 +48,7 @@ public class WelcomePage extends javax.swing.JFrame {
         btnAuthGuru = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new java.awt.GridLayout());
+        getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
         jPanel2.setBackground(new java.awt.Color(51, 51, 255));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -59,7 +59,7 @@ public class WelcomePage extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Arial Black", 1, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Selamat Datang di Aplikasi Kursus Online");
-        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 60, -1, -1));
+        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 60, -1, -1));
 
         btnAuthSiswa.setBackground(new java.awt.Color(0, 0, 255));
         btnAuthSiswa.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -95,12 +95,12 @@ public class WelcomePage extends javax.swing.JFrame {
 
     private void btnAuthGuruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAuthGuruActionPerformed
         // TODO add your handling code here:
-        new LoginGuru();
+        new LogingGuru(this);
     }//GEN-LAST:event_btnAuthGuruActionPerformed
 
     private void btnAuthSiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAuthSiswaActionPerformed
         // TODO add your handling code here:
-        new LoginSiswa();
+        new LoginSiswa(this);
     }//GEN-LAST:event_btnAuthSiswaActionPerformed
 
     /**

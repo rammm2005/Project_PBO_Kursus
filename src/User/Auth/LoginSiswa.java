@@ -2,7 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package User;
+package User.Auth;
+
+import dbConnect.dbConnect;
+import java.lang.System.Logger;
+import java.util.regex.Pattern;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -13,10 +19,44 @@ public class LoginSiswa extends javax.swing.JFrame {
     /**
      * Creates new form LoginSiswa
      */
-    public LoginSiswa() {
+    public LoginSiswa(JFrame currentFrame) {
+        currentFrame.dispose();
         initComponents();
+        this.setVisible(true);
     }
 
+    private static final Logger logger = Logger.getLogger(RegisterUser.class.getName());
+
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        Pattern pat = Pattern.compile(emailRegex);
+        return pat.matcher(email).matches();
+    }
+
+//    private boolean authenticateUser(String email, String password) {
+//        Connection conn = dbConnect.connect();
+//        if (conn == null) {
+//            return false;
+//        }
+//
+//        String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+//        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//            pstmt.setString(1, email);
+//            pstmt.setString(2, password);
+//
+//            ResultSet rs = pstmt.executeQuery();
+//            return rs.next(); // Returns true if a record is found, false otherwise
+//        } catch (SQLException e) {
+//            dbConnect.logger.log(Level.SEVERE, "SQL exception during authentication", e);
+//            return false;
+//        } finally {
+//            try {
+//                conn.close();
+//            } catch (SQLException e) {
+//                dbConnect.logger.log(Level.SEVERE, "Failed to close connection", e);
+//            }
+//        }
+//    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -33,12 +73,10 @@ public class LoginSiswa extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         emailInput = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        passInput = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         regiterLink = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnLogin = new javax.swing.JButton();
+        passInput = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -60,7 +98,6 @@ public class LoginSiswa extends javax.swing.JFrame {
         jLabel4.setText("Email");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 210, 40, 20));
 
-        emailInput.setText("jTextField1");
         emailInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 emailInputActionPerformed(evt);
@@ -72,17 +109,6 @@ public class LoginSiswa extends javax.swing.JFrame {
         jLabel5.setText("Password");
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 300, 70, 20));
 
-        passInput.setText("jTextField1");
-        jPanel1.add(passInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 330, 330, 40));
-
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel6.setText("Masuk ke Halaman Dashboard Pemelajaran kamu");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, 570, 40));
-
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel7.setText("dengan login disini");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, 230, 40));
-
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel8.setText("Belum memiliki akun ?");
         jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 470, -1, -1));
@@ -92,32 +118,93 @@ public class LoginSiswa extends javax.swing.JFrame {
         regiterLink.setForeground(new java.awt.Color(0, 51, 255));
         regiterLink.setText("register disini");
         regiterLink.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jPanel1.add(regiterLink, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 470, -1, -1));
-
-        jButton1.setBackground(new java.awt.Color(0, 51, 255));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Login");
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+        regiterLink.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                regiterLinkMouseClicked(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 400, 330, 40));
+        jPanel1.add(regiterLink, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 470, -1, -1));
+
+        btnLogin.setBackground(new java.awt.Color(0, 51, 255));
+        btnLogin.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnLogin.setForeground(new java.awt.Color(255, 255, 255));
+        btnLogin.setText("Login");
+        btnLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 400, 330, 40));
+
+        passInput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passInputActionPerformed(evt);
+            }
+        });
+        jPanel1.add(passInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 330, 330, 40));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 1010, 610));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        String email = emailInput.getText();
+        String password = new String(passInput.getPassword());
+
+        if (email.isEmpty() || email.isBlank()) {
+            System.out.println("Email eerrr");
+            return;
+        } else if (password.isEmpty() || password.isBlank()) {
+            System.out.println("password eerrr");
+            return;
+        }
+
+        try (Connection connection = dbConnect.connect()) {
+            if (connection != null) {
+                String query = "SELECT * FROM users WHERE email = ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setString(1, email);
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.next()) {
+                    // get the hashing pass from db
+                    String hashedPassword = resultSet.getString("password");
+
+                    // check if password input is = to pass in db
+                    if (checkPassword(password, hashedPassword)) {
+                        showAlert(AlertType.INFORMATION, "Login Berhasil", "Selamat datang, " + resultSet.getString("name") + "!");
+                        Main.setUserLoggedIn(true);
+                        redirectToDashboard();
+                    } else if (!checkPassword(password, hashedPassword)) {
+                        showAlert(AlertType.ERROR, "Error Login : ", "Password yang anda masukan salah!");
+                    } else {
+                        showAlert(AlertType.ERROR, "Error Login : ", "Email anda salah!");
+                    }
+                } else {
+                    showAlert(AlertType.ERROR, "Error Login : ", "Email belum terdaftar!");
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "An SQL exception occurred", e);
+        } catch (NoSuchAlgorithmException e) {
+            logger.log(Level.SEVERE, "An exception occurred", e);
+        }
+    }//GEN-LAST:event_btnLoginActionPerformed
 
     private void emailInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailInputActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_emailInputActionPerformed
+
+    private void regiterLinkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_regiterLinkMouseClicked
+        // TODO add your handling code here:
+        new RegisterUser(this);
+    }//GEN-LAST:event_regiterLinkMouseClicked
+
+    private void passInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passInputActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_passInputActionPerformed
 
     /**
      * @param args the command line arguments
@@ -147,26 +234,24 @@ public class LoginSiswa extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LoginSiswa().setVisible(true);
-            }
-        });
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new LoginSiswa().setVisible(true);
+//            }
+//        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnLogin;
     private javax.swing.JTextField emailInput;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField passInput;
+    private javax.swing.JPasswordField passInput;
     private javax.swing.JLabel regiterLink;
     // End of variables declaration//GEN-END:variables
 }
