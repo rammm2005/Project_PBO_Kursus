@@ -4,7 +4,18 @@
  */
 package User.Auth;
 
+import dbConnect.dbConnect;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.DefaultComboBoxModel;
 
 /**
  *
@@ -19,6 +30,49 @@ public class RegisterUser extends javax.swing.JFrame {
         currentFrame.dispose();
         initComponents();
         this.setVisible(true);
+    }
+
+    private String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = md.digest(password.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hashBytes) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    private boolean isEmailValid(String email) {
+        String regex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:gmail|yahoo)\\.com$";
+
+        Pattern pattern = Pattern.compile(regex);
+
+        Matcher matcher = pattern.matcher(email);
+
+        return matcher.matches();
+    }
+
+    private boolean createUser(String name, String email, String hashedPassword, String Pendidikan) {
+        try (Connection connection = dbConnect.connect()) {
+            if (connection != null) {
+                String query = "INSERT INTO users (name, email, password, pendidikan) VALUES (?, ?, ?, ?)";
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setString(1, name);
+                preparedStatement.setString(2, email);
+                preparedStatement.setString(3, hashedPassword);
+                preparedStatement.setString(4, Pendidikan);
+                int rowsAffected = preparedStatement.executeUpdate();
+                return rowsAffected > 0;
+            }
+        } catch (SQLException e) {
+            dbConnect.logger.log(Level.SEVERE, "Database connection error", e);
+        }
+        return false;
     }
 
     /**
@@ -72,13 +126,12 @@ public class RegisterUser extends javax.swing.JFrame {
         jLabel3.setText("Email");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 180, 60, -1));
 
-        emailInput.setText("jTextField1");
         emailInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 emailInputActionPerformed(evt);
             }
         });
-        jPanel1.add(emailInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 210, 360, 30));
+        jPanel1.add(emailInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 210, 360, 40));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 0, 0));
@@ -89,13 +142,12 @@ public class RegisterUser extends javax.swing.JFrame {
         jLabel5.setText("Password");
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 260, 110, -1));
 
-        passInput.setText("jPasswordField1");
         passInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 passInputActionPerformed(evt);
             }
         });
-        jPanel1.add(passInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 290, 360, 30));
+        jPanel1.add(passInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 290, 360, 40));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 0, 0));
@@ -106,13 +158,12 @@ public class RegisterUser extends javax.swing.JFrame {
         jLabel7.setText("Ulangi Password");
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 330, 140, -1));
 
-        cpassInput.setText("jPasswordField1");
         cpassInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cpassInputActionPerformed(evt);
             }
         });
-        jPanel1.add(cpassInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 360, 360, 30));
+        jPanel1.add(cpassInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 360, 360, 40));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 0, 0));
@@ -140,16 +191,20 @@ public class RegisterUser extends javax.swing.JFrame {
         jLabel11.setText("*");
         jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 100, 20, -1));
 
-        nameInput.setText("jTextField1");
         nameInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nameInputActionPerformed(evt);
             }
         });
-        jPanel1.add(nameInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 130, 360, 30));
+        jPanel1.add(nameInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 130, 360, 40));
 
         pendidikanInput.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        pendidikanInput.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        pendidikanInput.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SMA / SMK", "Diploma", "Sarjana", "SMP " }));
+        pendidikanInput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pendidikanInputActionPerformed(evt);
+            }
+        });
         jPanel1.add(pendidikanInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 440, 360, 40));
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -171,6 +226,11 @@ public class RegisterUser extends javax.swing.JFrame {
         loginBtn.setText("Bergabung");
         loginBtn.setToolTipText("click untuk register");
         loginBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        loginBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginBtnActionPerformed(evt);
+            }
+        });
         jPanel1.add(loginBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 510, 360, 40));
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -218,6 +278,47 @@ public class RegisterUser extends javax.swing.JFrame {
         // TODO add your handling code here:
         new LoginSiswa(this);
     }//GEN-LAST:event_loginLinkMouseClicked
+
+    private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
+        // TODO add your handling code here:
+        String name = nameInput.getText();
+        String email = emailInput.getText();
+        String password = new String(passInput.getPassword());
+        String confirmPassword = new String(cpassInput.getPassword());
+        String Pendidikan = (String) pendidikanInput.getSelectedItem();
+
+        // Validate input data
+        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || Pendidikan.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tolong isi Semua kolom ! ", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (isEmailValid(email)) {
+            if (!password.equals(confirmPassword)) {
+                JOptionPane.showMessageDialog(this, "Confirm Password anda Tidak sama dengan Password ! ", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            String hashedPassword = hashPassword(password);
+
+            boolean success = createUser(name, email, hashedPassword, Pendidikan);
+
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Berhasil Melakukan Register !", "Success", JOptionPane.INFORMATION_MESSAGE);
+                // Redirect to login page or dashboard
+                new LoginSiswa(this);
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal Melakukan Register ! ", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Email yang anda masukan tidak Valid !", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }//GEN-LAST:event_loginBtnActionPerformed
+
+    private void pendidikanInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pendidikanInputActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pendidikanInputActionPerformed
 
     /**
      * @param args the command line arguments

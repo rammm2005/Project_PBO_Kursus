@@ -15,7 +15,8 @@ import java.util.logging.Logger;
  * @author Rama Dev
  */
 public class dbConnect {
-    private static final Logger logger = Logger.getLogger(dbConnect.class.getName());
+
+    public static final Logger logger = Logger.getLogger(dbConnect.class.getName());
     private static final String URL = "jdbc:mysql://localhost:3306/course_registration?zeroDateTimeBehavior=CONVERT_TO_NULL";
     private static final String USER = "root";
     private static final String PASSWORD = "";
@@ -23,9 +24,24 @@ public class dbConnect {
     public static Connection connect() {
         try {
             return DriverManager.getConnection(URL, USER, PASSWORD);
+
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "An SQL exception occurred", e);
             return null;
+        }
+    }
+
+    public static void testConnection() {
+        Connection conn = connect();
+        if (conn != null) {
+            System.out.println("Connected to the database successfully!");
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Failed to close connection", e);
+            }
+        } else {
+            System.out.println("Failed to connect to the database!");
         }
     }
 }

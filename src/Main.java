@@ -1,7 +1,12 @@
 
+import User.Auth.UserSession;
+import User.Pages.Dashboard;
 import dbConnect.dbConnect;
+import java.awt.Frame;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.prefs.Preferences;
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 /*
@@ -14,26 +19,37 @@ import javax.swing.SwingUtilities;
  */
 public class Main {
 
+    private static final String PREFS_KEY_LOGGED_IN_USER = "loggedInUser";
+    private static Dashboard dashboard;
+
     public static void main(String[] args) {
-//        System.out.println("Hello World!");
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                WelcomePage welcome = new WelcomePage();
+        Preferences prefs = Preferences.userNodeForPackage(Main.class);
+
+        String loggedInUser = prefs.get(PREFS_KEY_LOGGED_IN_USER, null);
+        if (loggedInUser != null) {
+            openDashboardPage(loggedInUser);
+        } else {
+            openWelcomePage();
+        }
+    }
+
+    private static void openWelcomePage() {
+        SwingUtilities.invokeLater(() -> {
+            WelcomePage welcome = new WelcomePage();
+            dbConnect.testConnection();
+        });
+    }
+
+    private static void openDashboardPage(String loggedInUser) {
+        JFrame frame = new JFrame();
+        SwingUtilities.invokeLater(() -> {
+            if (dashboard == null) {
+                dashboard = new Dashboard(frame, loggedInUser);
+                dbConnect.testConnection();
+            } else {
+                dashboard.updateUsername(loggedInUser);
             }
         });
-
-//        Connection connection = dbConnect.connect();
-//        if (connection != null) {
-//            System.out.println("Connection successful!");
-//            try {
-//                connection.close();
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            System.out.println("Connection failed!");
-//        }
     }
 
 }

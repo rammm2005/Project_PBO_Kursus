@@ -4,8 +4,16 @@
  */
 package User.Auth;
 
+import User.Pages.Dashboard;
 import dbConnect.dbConnect;
-import java.lang.System.Logger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -25,38 +33,54 @@ public class LoginSiswa extends javax.swing.JFrame {
         this.setVisible(true);
     }
 
-    private static final Logger logger = Logger.getLogger(RegisterUser.class.getName());
+    public boolean authenticateUser(String email, String password) {
+        try (Connection connection = dbConnect.connect()) {
+            if (connection != null) {
+                String query = "SELECT * FROM users WHERE email = ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setString(1, email);
+                ResultSet resultSet = preparedStatement.executeQuery();
 
-    private boolean isValidEmail(String email) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        Pattern pat = Pattern.compile(emailRegex);
-        return pat.matcher(email).matches();
+                if (resultSet.next()) {
+                    String storedHash = resultSet.getString("password");
+                    return checkPassword(password, storedHash);
+                }
+            }
+        } catch (SQLException e) {
+            dbConnect.logger.log(Level.SEVERE, "Database connection error", e);
+        }
+        return false;
     }
 
-//    private boolean authenticateUser(String email, String password) {
-//        Connection conn = dbConnect.connect();
-//        if (conn == null) {
-//            return false;
-//        }
-//
-//        String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
-//        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//            pstmt.setString(1, email);
-//            pstmt.setString(2, password);
-//
-//            ResultSet rs = pstmt.executeQuery();
-//            return rs.next(); // Returns true if a record is found, false otherwise
-//        } catch (SQLException e) {
-//            dbConnect.logger.log(Level.SEVERE, "SQL exception during authentication", e);
-//            return false;
-//        } finally {
-//            try {
-//                conn.close();
-//            } catch (SQLException e) {
-//                dbConnect.logger.log(Level.SEVERE, "Failed to close connection", e);
-//            }
-//        }
-//    }
+    private boolean isEmailValid(String email) {
+        String regex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:gmail|yahoo)\\.com$";
+
+        Pattern pattern = Pattern.compile(regex);
+
+        Matcher matcher = pattern.matcher(email);
+
+        return matcher.matches();
+    }
+
+    private String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = md.digest(password.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hashBytes) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            dbConnect.logger.log(Level.SEVERE, "Hashing algorithm not found", e);
+            return null;
+        }
+    }
+
+    private boolean checkPassword(String password, String hashedPassword) {
+        return hashPassword(password).equals(hashedPassword);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -154,42 +178,26 @@ public class LoginSiswa extends javax.swing.JFrame {
         String password = new String(passInput.getPassword());
 
         if (email.isEmpty() || email.isBlank()) {
-            System.out.println("Email eerrr");
+            JOptionPane.showMessageDialog(this, "Email tidak boleh kosong", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         } else if (password.isEmpty() || password.isBlank()) {
-            System.out.println("password eerrr");
+            JOptionPane.showMessageDialog(this, "Password tidak boleh kosong", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        try (Connection connection = dbConnect.connect()) {
-            if (connection != null) {
-                String query = "SELECT * FROM users WHERE email = ?";
-                PreparedStatement preparedStatement = connection.prepareStatement(query);
-                preparedStatement.setString(1, email);
-                ResultSet resultSet = preparedStatement.executeQuery();
-
-                if (resultSet.next()) {
-                    // get the hashing pass from db
-                    String hashedPassword = resultSet.getString("password");
-
-                    // check if password input is = to pass in db
-                    if (checkPassword(password, hashedPassword)) {
-                        showAlert(AlertType.INFORMATION, "Login Berhasil", "Selamat datang, " + resultSet.getString("name") + "!");
-                        Main.setUserLoggedIn(true);
-                        redirectToDashboard();
-                    } else if (!checkPassword(password, hashedPassword)) {
-                        showAlert(AlertType.ERROR, "Error Login : ", "Password yang anda masukan salah!");
-                    } else {
-                        showAlert(AlertType.ERROR, "Error Login : ", "Email anda salah!");
-                    }
-                } else {
-                    showAlert(AlertType.ERROR, "Error Login : ", "Email belum terdaftar!");
-                }
+        if (isEmailValid(email)) {
+            System.out.println("Setting logged in user: " + email);
+            UserSession.setLoggedInUser(email);
+            if (authenticateUser(email, password)) {
+                JOptionPane.showMessageDialog(this, "Anda berhasil Login dengan " + email, "Success", JOptionPane.INFORMATION_MESSAGE);
+                Dashboard dashboard = new Dashboard(this, email);
+                dashboard.setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Password yang anda masukan salah", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "An SQL exception occurred", e);
-        } catch (NoSuchAlgorithmException e) {
-            logger.log(Level.SEVERE, "An exception occurred", e);
+        } else {
+            JOptionPane.showMessageDialog(this, "Email yang anda masukan tidak valid", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
