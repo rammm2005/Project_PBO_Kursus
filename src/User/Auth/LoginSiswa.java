@@ -67,7 +67,7 @@ public class LoginSiswa extends javax.swing.JFrame {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hashBytes = md.digest(password.getBytes());
             StringBuilder sb = new StringBuilder();
-            for (byte b : hashBytes) {
+            for (byte b : hashBytes) { // mengonversi setiap byte menjadi representasi string dalam format hexadecimal
                 sb.append(String.format("%02x", b));
             }
             return sb.toString();
@@ -116,7 +116,7 @@ public class LoginSiswa extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel3.setText("kamu masih di rindukan");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 130, 230, 40));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 130, 230, -1));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel4.setText("Email");

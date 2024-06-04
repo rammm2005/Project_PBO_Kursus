@@ -4,7 +4,18 @@
  */
 package Admin.Auth;
 
+import User.Auth.LoginSiswa;
+import dbConnect.dbConnect;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -19,6 +30,48 @@ public class RegisterAdmin extends javax.swing.JFrame {
         currentFrame.dispose();
         initComponents();
         this.setVisible(true);
+    }
+
+    private String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = md.digest(password.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hashBytes) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    private boolean isEmailValid(String email) {
+        String regex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:gmail|yahoo)\\.com$";
+
+        Pattern pattern = Pattern.compile(regex);
+
+        Matcher matcher = pattern.matcher(email);
+
+        return matcher.matches();
+    }
+
+    private boolean createUser(String name, String email, String hashedPassword) {
+        try (Connection connection = dbConnect.connect()) {
+            if (connection != null) {
+                String query = "INSERT INTO guru (name, email, password) VALUES (?, ?, ?)";
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setString(1, name);
+                preparedStatement.setString(2, email);
+                preparedStatement.setString(3, hashedPassword);
+                int rowsAffected = preparedStatement.executeUpdate();
+                return rowsAffected > 0;
+            }
+        } catch (SQLException e) {
+            dbConnect.logger.log(Level.SEVERE, "Database connection error", e);
+        }
+        return false;
     }
 
     /**
@@ -47,11 +100,8 @@ public class RegisterAdmin extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         nameInput = new javax.swing.JTextField();
-        mengajarInput = new javax.swing.JComboBox<>();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
-        loginBtn = new javax.swing.JButton();
+        registerAdmin = new javax.swing.JButton();
         jLabel15 = new javax.swing.JLabel();
         loginLink = new javax.swing.JLabel();
 
@@ -72,7 +122,6 @@ public class RegisterAdmin extends javax.swing.JFrame {
         jLabel3.setText("Email");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 180, 60, -1));
 
-        emailInput.setText("jTextField1");
         emailInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 emailInputActionPerformed(evt);
@@ -89,7 +138,6 @@ public class RegisterAdmin extends javax.swing.JFrame {
         jLabel5.setText("Password");
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 260, 110, -1));
 
-        passInput.setText("jPasswordField1");
         passInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 passInputActionPerformed(evt);
@@ -106,7 +154,6 @@ public class RegisterAdmin extends javax.swing.JFrame {
         jLabel7.setText("Ulangi Password");
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 330, 140, -1));
 
-        cpassInput.setText("jPasswordField1");
         cpassInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cpassInputActionPerformed(evt);
@@ -140,7 +187,6 @@ public class RegisterAdmin extends javax.swing.JFrame {
         jLabel11.setText("*");
         jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 100, 20, -1));
 
-        nameInput.setText("jTextField1");
         nameInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nameInputActionPerformed(evt);
@@ -148,39 +194,26 @@ public class RegisterAdmin extends javax.swing.JFrame {
         });
         jPanel1.add(nameInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 130, 360, 30));
 
-        mengajarInput.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        mengajarInput.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel1.add(mengajarInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 440, 360, 40));
-
-        jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel12.setText("Mengajar");
-        jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 410, 100, -1));
-
-        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(255, 0, 0));
-        jLabel13.setText("*");
-        jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 410, 30, -1));
-
         jLabel14.setFont(new java.awt.Font("Arial Black", 1, 24)); // NOI18N
         jLabel14.setText("Halaman Register ");
         jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 40, -1, -1));
 
-        loginBtn.setBackground(new java.awt.Color(0, 0, 204));
-        loginBtn.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        loginBtn.setForeground(new java.awt.Color(255, 255, 255));
-        loginBtn.setText("Bergabung");
-        loginBtn.setToolTipText("click untuk register");
-        loginBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        loginBtn.addActionListener(new java.awt.event.ActionListener() {
+        registerAdmin.setBackground(new java.awt.Color(0, 0, 204));
+        registerAdmin.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        registerAdmin.setForeground(new java.awt.Color(255, 255, 255));
+        registerAdmin.setText("Bergabung");
+        registerAdmin.setToolTipText("click untuk register");
+        registerAdmin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        registerAdmin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loginBtnActionPerformed(evt);
+                registerAdminActionPerformed(evt);
             }
         });
-        jPanel1.add(loginBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 510, 360, 40));
+        jPanel1.add(registerAdmin, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 430, 360, 40));
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel15.setText("Sudah memiliki akun ?");
-        jPanel1.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 580, 170, -1));
+        jPanel1.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 500, 170, -1));
 
         loginLink.setBackground(new java.awt.Color(0, 51, 255));
         loginLink.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -192,7 +225,7 @@ public class RegisterAdmin extends javax.swing.JFrame {
                 loginLinkMouseClicked(evt);
             }
         });
-        jPanel1.add(loginLink, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 580, -1, -1));
+        jPanel1.add(loginLink, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 500, -1, -1));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1010, 680));
 
@@ -219,9 +252,40 @@ public class RegisterAdmin extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_nameInputActionPerformed
 
-    private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
+    private void registerAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerAdminActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_loginBtnActionPerformed
+        String name = nameInput.getText();
+        String email = emailInput.getText();
+        String password = new String(passInput.getPassword());
+        String confirmPassword = new String(cpassInput.getPassword());
+
+        // Validate input data
+        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tolong isi Semua kolom ! ", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (isEmailValid(email)) {
+            if (!password.equals(confirmPassword)) {
+                JOptionPane.showMessageDialog(this, "Confirm Password anda Tidak sama dengan Password ! ", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            String hashedPassword = hashPassword(password);
+
+            boolean success = createUser(name, email, hashedPassword);
+
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Berhasil Melakukan Register !", "Success", JOptionPane.INFORMATION_MESSAGE);
+                // Redirect to login page or dashboard
+                new LogingGuru(this);
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal Melakukan Register ! ", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Email yang anda masukan tidak Valid !", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_registerAdminActionPerformed
 
     private void loginLinkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginLinkMouseClicked
         // TODO add your handling code here:
@@ -269,8 +333,6 @@ public class RegisterAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
@@ -283,10 +345,9 @@ public class RegisterAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JButton loginBtn;
     private javax.swing.JLabel loginLink;
-    private javax.swing.JComboBox<String> mengajarInput;
     private javax.swing.JTextField nameInput;
     private javax.swing.JPasswordField passInput;
+    private javax.swing.JButton registerAdmin;
     // End of variables declaration//GEN-END:variables
 }

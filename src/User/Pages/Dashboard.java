@@ -61,11 +61,12 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
+        panel_main = new javax.swing.JPanel();
         LogoutBtn = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
+        setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(0, 51, 153));
@@ -158,8 +159,8 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel13.setText("Hallo ! Selamat Datang");
         jPanel2.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, -1));
 
-        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jPanel2.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, 830, 600));
+        panel_main.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel2.add(panel_main, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, 830, 600));
 
         LogoutBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/switch.png"))); // NOI18N
         LogoutBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -242,7 +243,7 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel nameDisplay;
+    private javax.swing.JPanel panel_main;
     // End of variables declaration//GEN-END:variables
 }

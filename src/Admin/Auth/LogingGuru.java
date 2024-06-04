@@ -4,9 +4,23 @@
  */
 package Admin.Auth;
 
+import Admin.Dashboard.Dashboard_Admin;
+import User.Auth.UserSession;
+import User.Pages.Dashboard;
+import dbConnect.dbConnect;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -21,7 +35,54 @@ public class LogingGuru extends javax.swing.JFrame {
         currentFrame.dispose();
         initComponents();
         this.setVisible(true);
+    }
 
+    public boolean authenticateUser(String email, String password) {
+        try (Connection connection = dbConnect.connect()) {
+            if (connection != null) {
+                String query = "SELECT * FROM guru WHERE email = ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setString(1, email);
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.next()) {
+                    String storedHash = resultSet.getString("password");
+                    return checkPassword(password, storedHash);
+                }
+            }
+        } catch (SQLException e) {
+            dbConnect.logger.log(Level.SEVERE, "Database connection error", e);
+        }
+        return false;
+    }
+
+    private boolean isEmailValid(String email) {
+        String regex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:gmail|yahoo)\\.com$";
+
+        Pattern pattern = Pattern.compile(regex);
+
+        Matcher matcher = pattern.matcher(email);
+
+        return matcher.matches();
+    }
+
+    private String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = md.digest(password.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hashBytes) { // mengonversi setiap byte menjadi representasi string dalam format hexadecimal
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            dbConnect.logger.log(Level.SEVERE, "Hashing algorithm not found", e);
+            return null;
+        }
+    }
+
+    private boolean checkPassword(String password, String hashedPassword) {
+        return hashPassword(password).equals(hashedPassword);
     }
 
     /**
@@ -40,10 +101,10 @@ public class LogingGuru extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         emailInput = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        passInput = new javax.swing.JTextField();
         btnLogin = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         regiterLink = new javax.swing.JLabel();
+        passInput = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -75,7 +136,6 @@ public class LogingGuru extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel5.setText("Password");
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 330, 70, 20));
-        jPanel1.add(passInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 360, 330, 40));
 
         btnLogin.setBackground(new java.awt.Color(0, 51, 255));
         btnLogin.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -104,6 +164,7 @@ public class LogingGuru extends javax.swing.JFrame {
             }
         });
         jPanel1.add(regiterLink, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 500, 90, -1));
+        jPanel1.add(passInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 360, 330, 40));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 990, 610));
 
@@ -116,6 +177,31 @@ public class LogingGuru extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
+        String email = emailInput.getText();
+        String password = new String(passInput.getPassword());
+
+        if (email.isEmpty() || email.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Email tidak boleh kosong", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else if (password.isEmpty() || password.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Password tidak boleh kosong", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (isEmailValid(email)) {
+            System.out.println("Setting logged in user: " + email);
+            AdminSession.setLoggedInUser(email);
+            if (authenticateUser(email, password)) {
+                JOptionPane.showMessageDialog(this, "Anda berhasil Login dengan " + email, "Success", JOptionPane.INFORMATION_MESSAGE);
+                Dashboard_Admin dashboard = new Dashboard_Admin(this, email);
+                dashboard.setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Password yang anda masukan salah", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Email yang anda masukan tidak valid", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void regiterLinkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_regiterLinkMouseClicked
@@ -168,7 +254,7 @@ public class LogingGuru extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField passInput;
+    private javax.swing.JPasswordField passInput;
     private javax.swing.JLabel regiterLink;
     // End of variables declaration//GEN-END:variables
 }
