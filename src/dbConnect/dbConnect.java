@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -32,37 +33,45 @@ public class dbConnect {
         }
     }
 
-    public static void addPackage(String packageName) {
-        String sql = "INSERT INTO packages(name) VALUES(?)";
+    public static boolean addPackage(String packageName, String deskripsi) {
+        String sql = "INSERT INTO packages(name, deskripsi) VALUES(?, ?)";
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, packageName);
-            pstmt.executeUpdate();
-            System.out.println("Package added successfully!");
+            pstmt.setString(2, deskripsi);
+            int rowsAffected = pstmt.executeUpdate(); // Mengembalikan jumlah baris yang terpengaruh oleh perintah SQL
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Package added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                return true; 
+            } else {
+                JOptionPane.showMessageDialog(null, "Failed to add package!", "Error", JOptionPane.ERROR_MESSAGE);
+                return false; 
+            }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Failed to add package", e);
+            JOptionPane.showMessageDialog(null, "Failed to add package! See logs for details.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false; 
         }
     }
 
-    public static void selectPackage(String packageName) {
-        String sql = "SELECT * FROM packages ORDER BY DESC";
-
-        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                String id = rs.getString("id");
-                String name = rs.getString("name");
-            } else {
-                System.out.println("Package not found!");
-            }
-
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Failed to select package", e);
-        }
-    }
-
+//    public static void selectPackage(String packageName) {
+//        String sql = "SELECT * FROM packages ORDER BY DESC";
+//
+//        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//
+//            ResultSet rs = pstmt.executeQuery();
+//
+//            if (rs.next()) {
+//                String id = rs.getString("id");
+//                String name = rs.getString("name");
+//            } else {
+//                System.out.println("Package not found!");
+//            }
+//
+//        } catch (SQLException e) {
+//            logger.log(Level.SEVERE, "Failed to select package", e);
+//        }
+//    }
     public static void addMaterial(int packageId, String title, String content) {
         String sql = "INSERT INTO materials(package_id, title, content) VALUES(?, ?, ?)";
 

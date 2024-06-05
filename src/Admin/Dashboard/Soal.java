@@ -30,6 +30,7 @@ public class Soal extends javax.swing.JFrame {
     private String question;
     private String answer;
     private List<String> options;
+    boolean success;
 
     /**
      * Creates new form Soal
@@ -58,6 +59,7 @@ public class Soal extends javax.swing.JFrame {
                     Vector<Object> rowData = new Vector<>();
                     rowData.add(rs.getString(1));
                     rowData.add(rs.getString(2));
+                    rowData.add(rs.getString(3));
 
                     dt.addRow(rowData);
                 }
@@ -147,12 +149,16 @@ public class Soal extends javax.swing.JFrame {
         id_paket_t = new javax.swing.JTextField();
         save_button = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
+        resetButton = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         p_search = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         nama_paket_paket1 = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        deskripsi_paket = new javax.swing.JTextArea();
+        jLabel11 = new javax.swing.JLabel();
+        jButton13 = new javax.swing.JButton();
 
         jMenu1.setText("jMenu1");
 
@@ -452,11 +458,11 @@ public class Soal extends javax.swing.JFrame {
 
         tabel_paket.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null}
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Id", "Nama Paket"
+                "Id", "Nama Paket", "Deskripsi"
             }
         ));
         tabel_paket.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -469,10 +475,10 @@ public class Soal extends javax.swing.JFrame {
         panel_paket.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 350, 1000, 270));
 
         jLabel4.setText("Id Paket (AI)");
-        panel_paket.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 140, -1, -1));
+        panel_paket.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 50, -1, -1));
 
         id_paket_t.setEditable(false);
-        panel_paket.add(id_paket_t, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 160, 50, 40));
+        panel_paket.add(id_paket_t, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 70, 50, 40));
 
         save_button.setBackground(new java.awt.Color(0, 0, 255));
         save_button.setForeground(new java.awt.Color(255, 255, 255));
@@ -482,7 +488,7 @@ public class Soal extends javax.swing.JFrame {
                 save_buttonActionPerformed(evt);
             }
         });
-        panel_paket.add(save_button, new org.netbeans.lib.awtextra.AbsoluteConstraints(36, 226, -1, -1));
+        panel_paket.add(save_button, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, -1, -1));
 
         jButton8.setBackground(new java.awt.Color(0, 255, 255));
         jButton8.setForeground(new java.awt.Color(255, 255, 255));
@@ -492,21 +498,21 @@ public class Soal extends javax.swing.JFrame {
                 jButton8ActionPerformed(evt);
             }
         });
-        panel_paket.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(126, 226, -1, -1));
+        panel_paket.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 300, -1, -1));
 
-        jButton9.setBackground(new java.awt.Color(255, 0, 0));
-        jButton9.setForeground(new java.awt.Color(255, 255, 255));
-        jButton9.setText("Delete");
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
+        resetButton.setBackground(new java.awt.Color(153, 153, 153));
+        resetButton.setForeground(new java.awt.Color(255, 255, 255));
+        resetButton.setText("reset");
+        resetButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
+                resetButtonActionPerformed(evt);
             }
         });
-        panel_paket.add(jButton9, new org.netbeans.lib.awtextra.AbsoluteConstraints(216, 226, -1, -1));
+        panel_paket.add(resetButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 300, -1, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel5.setText("Halaman Paket Belajar");
-        panel_paket.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, -1, -1));
+        panel_paket.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, -1, -1));
 
         p_search.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -522,10 +528,29 @@ public class Soal extends javax.swing.JFrame {
 
         jLabel9.setText("Cari");
         panel_paket.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 280, -1, -1));
-        panel_paket.add(nama_paket_paket1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 160, 230, 40));
+        panel_paket.add(nama_paket_paket1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 230, 40));
 
-        jLabel10.setText("Masukan Nama Paket");
-        panel_paket.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, -1, -1));
+        jLabel10.setText("Deskripsi");
+        panel_paket.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, -1, -1));
+
+        deskripsi_paket.setColumns(20);
+        deskripsi_paket.setRows(5);
+        jScrollPane2.setViewportView(deskripsi_paket);
+
+        panel_paket.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, 380, 140));
+
+        jLabel11.setText("Masukan Nama Paket");
+        panel_paket.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, -1, -1));
+
+        jButton13.setBackground(new java.awt.Color(255, 0, 0));
+        jButton13.setForeground(new java.awt.Color(255, 255, 255));
+        jButton13.setText("Delete");
+        jButton13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton13ActionPerformed(evt);
+            }
+        });
+        panel_paket.add(jButton13, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 300, -1, -1));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -641,20 +666,36 @@ public class Soal extends javax.swing.JFrame {
     private void save_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_save_buttonActionPerformed
         // TODO add your handling code here:
         String name = nama_paket_paket1.getText();
+        String deskripsi = deskripsi_paket.getText();
+
+        success = dbConnect.addPackage(name, deskripsi);
 
         if (!name.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Berhasil membuat Paket " + name, "Success", JOptionPane.INFORMATION_MESSAGE);
-            addPackage(name);
+            if (success) {
+                tbload();
+//                JOptionPane.showMessageDialog(null, "Package added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                System.out.print("berhasil");
+            } else {
+                System.out.print("Error");
+            }
         }
+
+//        if (!name.isEmpty()) {
+//            JOptionPane.showMessageDialog(this, "Berhasil membuat Paket " + name, "Success", JOptionPane.INFORMATION_MESSAGE);
+//            addPackage(name);
+//        }
     }//GEN-LAST:event_save_buttonActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton8ActionPerformed
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+    private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton9ActionPerformed
+        nama_paket_paket1.setText("");
+        deskripsi_paket.setText("");
+        id_paket_t.setText("");
+    }//GEN-LAST:event_resetButtonActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
@@ -679,31 +720,41 @@ public class Soal extends javax.swing.JFrame {
     private void p_searchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_p_searchKeyReleased
         // TODO add your handling code here:
 
-        String name = p_search.getText();
+        String searchInput = p_search.getText();
         DefaultTableModel dt = (DefaultTableModel) tabel_paket.getModel();
-        dt.setRowCount(1);
+        dt.setRowCount(0);
 
         try (Connection connection = dbConnect.connect()) {
             if (connection != null) {
-                String query = "SELECT * FROM packages WHERE name= '" + name + "' ";
-                PreparedStatement preparedStatement = connection.prepareStatement(query);
-                ResultSet rs = preparedStatement.executeQuery();
+                String query;
+                PreparedStatement preparedStatement;
 
-                if (!rs.isBeforeFirst()) { 
-                    query = "SELECT * FROM packages";
+                try {
+                    int id = Integer.parseInt(searchInput);
+                    // Jika bisa, gunakan klausa id = ?
+                    query = "SELECT * FROM packages WHERE id = ?";
                     preparedStatement = connection.prepareStatement(query);
-                    rs = preparedStatement.executeQuery();
+                    preparedStatement.setInt(1, id);
+                } catch (NumberFormatException e) {
+                    // Jika tidak bisa, gunakan klausa name LIKE ? dan deskripsi LIKE ?
+                    query = "SELECT * FROM packages WHERE name LIKE ? OR deskripsi LIKE ?";
+                    preparedStatement = connection.prepareStatement(query);
+                    preparedStatement.setString(1, "%" + searchInput + "%");
+                    preparedStatement.setString(2, "%" + searchInput + "%");
                 }
 
-                
+                ResultSet rs = preparedStatement.executeQuery();
+
                 while (rs.next()) {
                     Vector v = new Vector();
                     v.add(rs.getString(1));
                     v.add(rs.getString(2));
+                    v.add(rs.getString(3));
+
                     dt.addRow(v);
                 }
-
             }
+
         } catch (SQLException e) {
             dbConnect.logger.log(Level.SEVERE, "Database connection error", e);
         }
@@ -715,9 +766,11 @@ public class Soal extends javax.swing.JFrame {
             int i = tabel_paket.getSelectedRow();
             String id = tabel_paket.getValueAt(i, 0).toString();
             String name = tabel_paket.getValueAt(i, 1).toString();
+            String deskripsi = tabel_paket.getValueAt(i, 2).toString();
 
             id_paket_t.setText(id);
             nama_paket_paket1.setText(name);
+            deskripsi_paket.setText(deskripsi);
         } else {
             System.out.print("ErrorCO");
         }
@@ -727,6 +780,10 @@ public class Soal extends javax.swing.JFrame {
     private void p_searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_p_searchActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_p_searchActionPerformed
+
+    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton13ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -767,22 +824,24 @@ public class Soal extends javax.swing.JFrame {
     private javax.swing.JLabel LogoutBtn1;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel dashboard;
+    private javax.swing.JTextArea deskripsi_paket;
     private javax.swing.JTextField id_paket_t;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
+    private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
@@ -804,6 +863,7 @@ public class Soal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JTable jTable1;
@@ -820,6 +880,7 @@ public class Soal extends javax.swing.JFrame {
     private javax.swing.JPanel panel_materi;
     private javax.swing.JPanel panel_paket;
     private javax.swing.JLabel profile;
+    private javax.swing.JButton resetButton;
     private javax.swing.JButton save_button;
     private javax.swing.JLabel soal1;
     private javax.swing.JTable tabel_paket;
