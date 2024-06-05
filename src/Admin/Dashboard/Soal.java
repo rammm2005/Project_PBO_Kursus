@@ -6,8 +6,20 @@ package Admin.Dashboard;
 
 import Admin.Auth.AdminSession;
 import Admin.Auth.LogingGuru;
+import dbConnect.dbConnect;
+import static dbConnect.dbConnect.addPackage;
+import java.awt.Color;
+import java.beans.Statement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Vector;
+import java.util.logging.Level;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -15,13 +27,62 @@ import javax.swing.JOptionPane;
  */
 public class Soal extends javax.swing.JFrame {
 
+    private String question;
+    private String answer;
+    private List<String> options;
+
     /**
      * Creates new form Soal
+     *
+     * @param frame frame
      */
     public Soal(JFrame frame) {
         initComponents();
         frame.dispose();
+        tbload();
         this.setVisible(true);
+    }
+
+    public void tbload() {
+        DefaultTableModel dt = (DefaultTableModel) tabel_paket.getModel();
+        dt.setRowCount(0);
+
+        try (Connection connection = dbConnect.connect()) {
+            if (connection != null) {
+                String query = "SELECT * FROM packages";
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                ResultSet rs = preparedStatement.executeQuery();
+
+                // Extract and add data to the table model
+                while (rs.next()) {
+                    Vector<Object> rowData = new Vector<>();
+                    rowData.add(rs.getString(1));
+                    rowData.add(rs.getString(2));
+
+                    dt.addRow(rowData);
+                }
+            }
+        } catch (SQLException e) {
+            dbConnect.logger.log(Level.SEVERE, "Database connection error", e);
+        }
+    }
+
+    public Soal(String question, String answer, List<String> options) {
+        this.question = question;
+        this.answer = answer;
+        this.options = options;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public List<String> getOptions() {
+        return options;
     }
 
     /**
@@ -33,19 +94,69 @@ public class Soal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel7 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        soal = new javax.swing.JLabel();
+        materi_p = new javax.swing.JLabel();
         jLabel33 = new javax.swing.JLabel();
         jLabel34 = new javax.swing.JLabel();
         dashboard = new javax.swing.JLabel();
         LogoutBtn1 = new javax.swing.JLabel();
+        soal1 = new javax.swing.JLabel();
+        p_paket = new javax.swing.JLabel();
         jLabel38 = new javax.swing.JLabel();
+        profile = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
         panel_main = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        profile = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jComboBox2 = new javax.swing.JComboBox<>();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jButton10 = new javax.swing.JButton();
+        jButton11 = new javax.swing.JButton();
+        jButton12 = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        panel_materi = new javax.swing.JPanel();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        jTable5 = new javax.swing.JTable();
+        jLabel12 = new javax.swing.JLabel();
+        jScrollPane10 = new javax.swing.JScrollPane();
+        jTextArea5 = new javax.swing.JTextArea();
+        jLabel13 = new javax.swing.JLabel();
+        jTextField7 = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jLabel15 = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        panel_paket = new javax.swing.JPanel();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        tabel_paket = new javax.swing.JTable();
+        jLabel4 = new javax.swing.JLabel();
+        id_paket_t = new javax.swing.JTextField();
+        save_button = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
+        jButton9 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        p_search = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        nama_paket_paket1 = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+
+        jMenu1.setText("jMenu1");
+
+        jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -65,17 +176,17 @@ public class Soal extends javax.swing.JFrame {
         jLabel6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jPanel7.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 410, 150, 30));
 
-        soal.setBackground(new java.awt.Color(255, 255, 255));
-        soal.setFont(new java.awt.Font("Myanmar Text", 1, 18)); // NOI18N
-        soal.setForeground(new java.awt.Color(255, 255, 255));
-        soal.setText("Soal");
-        soal.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        soal.addMouseListener(new java.awt.event.MouseAdapter() {
+        materi_p.setBackground(new java.awt.Color(255, 255, 255));
+        materi_p.setFont(new java.awt.Font("Myanmar Text", 1, 18)); // NOI18N
+        materi_p.setForeground(new java.awt.Color(255, 255, 255));
+        materi_p.setText("Material Pembelajaran");
+        materi_p.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        materi_p.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                soalMouseClicked(evt);
+                materi_pMouseClicked(evt);
             }
         });
-        jPanel7.add(soal, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 240, 150, 30));
+        jPanel7.add(materi_p, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 330, 200, 30));
 
         jLabel33.setFont(new java.awt.Font("Myanmar Text", 1, 18)); // NOI18N
         jLabel33.setForeground(new java.awt.Color(255, 255, 255));
@@ -109,13 +220,48 @@ public class Soal extends javax.swing.JFrame {
         });
         jPanel7.add(LogoutBtn1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 450, -1, -1));
 
+        soal1.setBackground(new java.awt.Color(255, 255, 255));
+        soal1.setFont(new java.awt.Font("Myanmar Text", 1, 18)); // NOI18N
+        soal1.setForeground(new java.awt.Color(255, 255, 255));
+        soal1.setText("Soal");
+        soal1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        soal1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                soal1MouseClicked(evt);
+            }
+        });
+        jPanel7.add(soal1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 240, 150, 30));
+
+        p_paket.setBackground(new java.awt.Color(255, 255, 255));
+        p_paket.setFont(new java.awt.Font("Myanmar Text", 1, 18)); // NOI18N
+        p_paket.setForeground(new java.awt.Color(255, 255, 255));
+        p_paket.setText("Paket Belajar");
+        p_paket.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        p_paket.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                p_paketMouseClicked(evt);
+            }
+        });
+        jPanel7.add(p_paket, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 290, 150, 30));
+
         getContentPane().add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 280, 760));
 
         jLabel38.setFont(new java.awt.Font("Comic Sans MS", 1, 24)); // NOI18N
-        jLabel38.setText("Halaman Soal");
+        jLabel38.setText("Halaman Guru");
         jLabel38.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         getContentPane().add(jLabel38, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 20, -1, -1));
 
+        profile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/user.png"))); // NOI18N
+        profile.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        profile.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                profileMouseClicked(evt);
+            }
+        });
+        getContentPane().add(profile, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 10, -1, -1));
+
+        panel_main.setBackground(new java.awt.Color(0, 0, 255));
+        panel_main.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         panel_main.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -131,28 +277,290 @@ public class Soal extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        panel_main.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 350, 890, 270));
+        panel_main.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 350, 990, 270));
+        panel_main.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 70, 230, 40));
 
-        getContentPane().add(panel_main, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 80, 890, 660));
+        jLabel3.setText("Jawaban");
+        panel_main.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 50, -1, -1));
 
-        profile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/user.png"))); // NOI18N
-        profile.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        profile.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                profileMouseClicked(evt);
+        jButton1.setBackground(new java.awt.Color(0, 0, 255));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("save");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(profile, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 10, -1, -1));
+        panel_main.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-32704, -32620, 75, -1));
+
+        jButton2.setBackground(new java.awt.Color(0, 255, 255));
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("update");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        panel_main.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 0, 0));
+
+        jButton3.setBackground(new java.awt.Color(255, 0, 0));
+        jButton3.setForeground(new java.awt.Color(255, 255, 255));
+        jButton3.setText("Delete");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        panel_main.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 0, 0));
+
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        panel_main.add(jComboBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 70, 240, 40));
+
+        jLabel14.setText("Nama Paket");
+        panel_main.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 50, -1, -1));
+
+        jLabel7.setText("Pertanyaan");
+        panel_main.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 130, -1, -1));
+
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+        panel_main.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 150, 370, 100));
+
+        jButton10.setBackground(new java.awt.Color(0, 0, 255));
+        jButton10.setForeground(new java.awt.Color(255, 255, 255));
+        jButton10.setText("save");
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
+        panel_main.add(jButton10, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 280, -1, -1));
+
+        jButton11.setBackground(new java.awt.Color(0, 255, 255));
+        jButton11.setForeground(new java.awt.Color(255, 255, 255));
+        jButton11.setText("update");
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
+        panel_main.add(jButton11, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 280, -1, -1));
+
+        jButton12.setBackground(new java.awt.Color(255, 0, 0));
+        jButton12.setForeground(new java.awt.Color(255, 255, 255));
+        jButton12.setText("Delete");
+        jButton12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton12ActionPerformed(evt);
+            }
+        });
+        panel_main.add(jButton12, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 280, -1, -1));
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel8.setText("Halaman Pertanyaan");
+        panel_main.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, -1, -1));
+
+        panel_materi.setBackground(new java.awt.Color(255, 0, 51));
+        panel_materi.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        panel_materi.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jTable5.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane9.setViewportView(jTable5);
+
+        panel_materi.add(jScrollPane9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 430, 1030, 280));
+
+        jLabel12.setText("Nama Paket");
+        panel_materi.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 110, -1, -1));
+
+        jTextArea5.setColumns(20);
+        jTextArea5.setRows(5);
+        jScrollPane10.setViewportView(jTextArea5);
+
+        panel_materi.add(jScrollPane10, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 210, 340, 130));
+
+        jLabel13.setText("Masukan Konten");
+        panel_materi.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 190, -1, -1));
+
+        jTextField7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField7ActionPerformed(evt);
+            }
+        });
+        panel_materi.add(jTextField7, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 130, 340, 40));
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+        panel_materi.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 130, 240, 40));
+
+        jLabel15.setText("Judul");
+        panel_materi.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 110, -1, -1));
+
+        jButton4.setBackground(new java.awt.Color(0, 0, 255));
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
+        jButton4.setText("save");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        panel_materi.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 370, -1, -1));
+
+        jButton5.setBackground(new java.awt.Color(0, 255, 255));
+        jButton5.setForeground(new java.awt.Color(255, 255, 255));
+        jButton5.setText("update");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        panel_materi.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 370, -1, -1));
+
+        jButton6.setBackground(new java.awt.Color(255, 0, 0));
+        jButton6.setForeground(new java.awt.Color(255, 255, 255));
+        jButton6.setText("Delete");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+        panel_materi.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 370, -1, -1));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setText("Halaman Materi");
+        panel_materi.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, -1, -1));
+
+        panel_paket.setBackground(new java.awt.Color(0, 204, 204));
+        panel_paket.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        panel_paket.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        tabel_paket.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Id", "Nama Paket"
+            }
+        ));
+        tabel_paket.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabel_paketMouseClicked(evt);
+            }
+        });
+        jScrollPane7.setViewportView(tabel_paket);
+
+        panel_paket.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 350, 1000, 270));
+
+        jLabel4.setText("Id Paket (AI)");
+        panel_paket.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 140, -1, -1));
+
+        id_paket_t.setEditable(false);
+        panel_paket.add(id_paket_t, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 160, 50, 40));
+
+        save_button.setBackground(new java.awt.Color(0, 0, 255));
+        save_button.setForeground(new java.awt.Color(255, 255, 255));
+        save_button.setText("save");
+        save_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                save_buttonActionPerformed(evt);
+            }
+        });
+        panel_paket.add(save_button, new org.netbeans.lib.awtextra.AbsoluteConstraints(36, 226, -1, -1));
+
+        jButton8.setBackground(new java.awt.Color(0, 255, 255));
+        jButton8.setForeground(new java.awt.Color(255, 255, 255));
+        jButton8.setText("update");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+        panel_paket.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(126, 226, -1, -1));
+
+        jButton9.setBackground(new java.awt.Color(255, 0, 0));
+        jButton9.setForeground(new java.awt.Color(255, 255, 255));
+        jButton9.setText("Delete");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+        panel_paket.add(jButton9, new org.netbeans.lib.awtextra.AbsoluteConstraints(216, 226, -1, -1));
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel5.setText("Halaman Paket Belajar");
+        panel_paket.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, -1, -1));
+
+        p_search.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                p_searchActionPerformed(evt);
+            }
+        });
+        p_search.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                p_searchKeyReleased(evt);
+            }
+        });
+        panel_paket.add(p_search, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 300, 230, 40));
+
+        jLabel9.setText("Cari");
+        panel_paket.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 280, -1, -1));
+        panel_paket.add(nama_paket_paket1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 160, 230, 40));
+
+        jLabel10.setText("Masukan Nama Paket");
+        panel_paket.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, -1, -1));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panel_materi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panel_paket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panel_main, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panel_materi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panel_paket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panel_main, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 90, 900, 610));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void soalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_soalMouseClicked
+    private void materi_pMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_materi_pMouseClicked
         // TODO add your handling code here:
-        dispose();
-        Soal soal = new Soal(this);
-        soal.setVisible(true);
-    }//GEN-LAST:event_soalMouseClicked
+//        dispose();
+//        Soal soal = new Soal(this);
+//        soal.setVisible(true);
+        panel_paket.setVisible(false);
+        panel_materi.setVisible(true);
+        panel_main.setVisible(false);
+
+        soal1.setForeground(Color.GRAY);
+        p_paket.setForeground(Color.GRAY);
+        materi_p.setForeground(Color.WHITE);
+
+    }//GEN-LAST:event_materi_pMouseClicked
 
     private void dashboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dashboardMouseClicked
         // TODO add your handling code here:
@@ -179,54 +587,241 @@ public class Soal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_LogoutBtn1MouseClicked
 
+    private void soal1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_soal1MouseClicked
+        // TODO add your handling code here:
+        panel_paket.setVisible(false);
+        panel_materi.setVisible(false);
+        panel_main.setVisible(true);
+
+        soal1.setForeground(Color.WHITE);
+        p_paket.setForeground(Color.GRAY);
+        materi_p.setForeground(Color.GRAY);
+
+    }//GEN-LAST:event_soal1MouseClicked
+
+    private void p_paketMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_p_paketMouseClicked
+        // TODO add your handling code here:
+        panel_paket.setVisible(true);
+        panel_materi.setVisible(false);
+        panel_main.setVisible(false);
+
+        soal1.setForeground(Color.GRAY);
+        p_paket.setForeground(Color.WHITE);
+        materi_p.setForeground(Color.GRAY);
+    }//GEN-LAST:event_p_paketMouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jTextField7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField7ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField7ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void save_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_save_buttonActionPerformed
+        // TODO add your handling code here:
+        String name = nama_paket_paket1.getText();
+
+        if (!name.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Berhasil membuat Paket " + name, "Success", JOptionPane.INFORMATION_MESSAGE);
+            addPackage(name);
+        }
+    }//GEN-LAST:event_save_buttonActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton12ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void p_searchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_p_searchKeyReleased
+        // TODO add your handling code here:
+
+        String name = p_search.getText();
+        DefaultTableModel dt = (DefaultTableModel) tabel_paket.getModel();
+        dt.setRowCount(1);
+
+        try (Connection connection = dbConnect.connect()) {
+            if (connection != null) {
+                String query = "SELECT * FROM packages WHERE name= '" + name + "' ";
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                ResultSet rs = preparedStatement.executeQuery();
+
+                if (!rs.isBeforeFirst()) { 
+                    query = "SELECT * FROM packages";
+                    preparedStatement = connection.prepareStatement(query);
+                    rs = preparedStatement.executeQuery();
+                }
+
+                
+                while (rs.next()) {
+                    Vector v = new Vector();
+                    v.add(rs.getString(1));
+                    v.add(rs.getString(2));
+                    dt.addRow(v);
+                }
+
+            }
+        } catch (SQLException e) {
+            dbConnect.logger.log(Level.SEVERE, "Database connection error", e);
+        }
+    }//GEN-LAST:event_p_searchKeyReleased
+
+    private void tabel_paketMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabel_paketMouseClicked
+        // TODO add your handling code here:
+        if (tabel_paket.getSelectedRow() != -1) {
+            int i = tabel_paket.getSelectedRow();
+            String id = tabel_paket.getValueAt(i, 0).toString();
+            String name = tabel_paket.getValueAt(i, 1).toString();
+
+            id_paket_t.setText(id);
+            nama_paket_paket1.setText(name);
+        } else {
+            System.out.print("ErrorCO");
+        }
+
+    }//GEN-LAST:event_tabel_paketMouseClicked
+
+    private void p_searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_p_searchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_p_searchActionPerformed
+
     /**
-         * @param args the command line arguments
-         */
-        //    public static void main(String args[]) {
-        //        /* Set the Nimbus look and feel */
-        //        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        //        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-        //         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-        //         */
-        //        try {
-        //            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-        //                if ("Nimbus".equals(info.getName())) {
-        //                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-        //                    break;
-        //                }
-        //            }
-        //        } catch (ClassNotFoundException ex) {
-        //            java.util.logging.Logger.getLogger(Soal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        //        } catch (InstantiationException ex) {
-        //            java.util.logging.Logger.getLogger(Soal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        //        } catch (IllegalAccessException ex) {
-        //            java.util.logging.Logger.getLogger(Soal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        //        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-        //            java.util.logging.Logger.getLogger(Soal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        //        }
-        //        //</editor-fold>
-        //
-        //        /* Create and display the form */
-        //        java.awt.EventQueue.invokeLater(new Runnable() {
-        //            public void run() {
-        //                new Soal().setVisible(true);
-        //            }
-        //        });
-        //    }
+     * @param args the command line arguments
+     */
+    //    public static void main(String args[]) {
+    //        /* Set the Nimbus look and feel */
+    //        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+    //        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+    //         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+    //         */
+    //        try {
+    //            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+    //                if ("Nimbus".equals(info.getName())) {
+    //                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+    //                    break;
+    //                }
+    //            }
+    //        } catch (ClassNotFoundException ex) {
+    //            java.util.logging.Logger.getLogger(Soal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    //        } catch (InstantiationException ex) {
+    //            java.util.logging.Logger.getLogger(Soal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    //        } catch (IllegalAccessException ex) {
+    //            java.util.logging.Logger.getLogger(Soal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    //        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+    //            java.util.logging.Logger.getLogger(Soal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    //        }
+    //        //</editor-fold>
+    //
+    //        /* Create and display the form */
+    //        java.awt.EventQueue.invokeLater(new Runnable() {
+    //            public void run() {
+    //                new Soal().setVisible(true);
+    //            }
+    //        });
+    //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LogoutBtn1;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel dashboard;
+    private javax.swing.JTextField id_paket_t;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel38;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane10;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable5;
+    private javax.swing.JTextArea jTextArea5;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField7;
+    private javax.swing.JLabel materi_p;
+    private javax.swing.JTextField nama_paket_paket1;
+    private javax.swing.JLabel p_paket;
+    private javax.swing.JTextField p_search;
     private javax.swing.JPanel panel_main;
+    private javax.swing.JPanel panel_materi;
+    private javax.swing.JPanel panel_paket;
     private javax.swing.JLabel profile;
-    private javax.swing.JLabel soal;
+    private javax.swing.JButton save_button;
+    private javax.swing.JLabel soal1;
+    private javax.swing.JTable tabel_paket;
     // End of variables declaration//GEN-END:variables
 }

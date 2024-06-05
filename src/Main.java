@@ -46,6 +46,7 @@ public class Main {
             if (dashboard == null) {
                 dashboard = new Dashboard(frame, loggedInUser);
                 dbConnect.testConnection();
+                dbConnect.testConnection();
             } else {
                 dashboard.updateUsername(loggedInUser);
             }
