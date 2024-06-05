@@ -3,6 +3,7 @@ import User.Auth.UserSession;
 import User.Pages.Dashboard;
 import dbConnect.dbConnect;
 import java.awt.Frame;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.prefs.Preferences;
@@ -21,6 +22,9 @@ public class Main {
 
     private static final String PREFS_KEY_LOGGED_IN_USER = "loggedInUser";
     private static Dashboard dashboard;
+
+    String relativePath = "src/assets/paket";
+    String absolutePath = System.getProperty("user.dir") + File.separator + relativePath;
 
     public static void main(String[] args) {
         Preferences prefs = Preferences.userNodeForPackage(Main.class);

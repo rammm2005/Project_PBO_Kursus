@@ -4,6 +4,7 @@
  */
 package dbConnect;
 
+import java.io.InputStream;
 import java.sql.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -33,25 +34,63 @@ public class dbConnect {
         }
     }
 
-    public static boolean addPackage(String packageName, String deskripsi) {
-        String sql = "INSERT INTO packages(name, deskripsi) VALUES(?, ?)";
+    public static boolean addPackage(String packageName, String deskripsi, InputStream image) {
+        String sql = "INSERT INTO packages(name, deskripsi, image) VALUES(?, ?, ?)";
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, packageName);
             pstmt.setString(2, deskripsi);
+            pstmt.setBinaryStream(3, image);
             int rowsAffected = pstmt.executeUpdate(); // Mengembalikan jumlah baris yang terpengaruh oleh perintah SQL
             if (rowsAffected > 0) {
                 JOptionPane.showMessageDialog(null, "Package added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                return true; 
+                return true;
             } else {
                 JOptionPane.showMessageDialog(null, "Failed to add package!", "Error", JOptionPane.ERROR_MESSAGE);
-                return false; 
+                return false;
             }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Failed to add package", e);
             JOptionPane.showMessageDialog(null, "Failed to add package! See logs for details.", "Error", JOptionPane.ERROR_MESSAGE);
-            return false; 
+            return false;
         }
+    }
+
+    public static boolean editPackage(int id, String packageName, String deskripsi) {
+        String sql = "UPDATE packages SET name = ?, deskripsi = ? WHERE id = ?";
+
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, packageName);
+            pstmt.setString(2, deskripsi);
+            pstmt.setInt(3, id);
+            int rowsAffected = pstmt.executeUpdate(); // Mengembalikan jumlah baris yang terpengaruh oleh perintah SQL
+            if (rowsAffected > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Failed to update package", e);
+            return false;
+        }
+    }
+
+    public static boolean deletePackage(int id) {
+        String sql = "DELETE FROM packages WHERE id = ?";
+
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Failed to Delete package", e);
+            return false;
+        }
+
     }
 
 //    public static void selectPackage(String packageName) {

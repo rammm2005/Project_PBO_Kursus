@@ -8,8 +8,19 @@ import Admin.Auth.AdminSession;
 import Admin.Auth.LogingGuru;
 import dbConnect.dbConnect;
 import static dbConnect.dbConnect.addPackage;
+import static dbConnect.dbConnect.deletePackage;
+import static dbConnect.dbConnect.editPackage;
 import java.awt.Color;
+import java.sql.Blob;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.beans.Statement;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +28,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -32,6 +47,8 @@ public class Soal extends javax.swing.JFrame {
     private List<String> options;
     boolean success;
 
+    String pathImgPaket = null;
+
     /**
      * Creates new form Soal
      *
@@ -41,6 +58,7 @@ public class Soal extends javax.swing.JFrame {
         initComponents();
         frame.dispose();
         tbload();
+//        label_image_paket.setIcon(null);
         this.setVisible(true);
     }
 
@@ -54,18 +72,50 @@ public class Soal extends javax.swing.JFrame {
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                 ResultSet rs = preparedStatement.executeQuery();
 
-                // Extract and add data to the table model
                 while (rs.next()) {
                     Vector<Object> rowData = new Vector<>();
                     rowData.add(rs.getString(1));
                     rowData.add(rs.getString(2));
                     rowData.add(rs.getString(3));
 
+                    Blob imageBlob = rs.getBlob(4);
+                    String imagePath = "src/assets/paket/" + rs.getString(1) + ".png";
+
+                    File imageFile = new File(imagePath);
+
+                    if (imageFile.exists()) {
+                        // Use existing image file to create ImageIcon
+                        BufferedImage image = ImageIO.read(imageFile);
+                        ImageIcon icon = new ImageIcon(image);
+                        label_image_paket.setIcon(icon);
+                    } else if (imageBlob != null) {
+                        // Save image from Blob to file
+                        try (InputStream inputStream = imageBlob.getBinaryStream(); FileOutputStream fos = new FileOutputStream(imageFile)) {
+                            byte[] buffer = new byte[1024];
+                            int bytesRead;
+                            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                                fos.write(buffer, 0, bytesRead);
+                            }
+                        }
+
+                        // Create ImageIcon from the saved image file
+                        BufferedImage image = ImageIO.read(imageFile);
+                        ImageIcon icon = new ImageIcon(image);
+                        label_image_paket.setIcon(icon);
+                    } else {
+                        // No image found for the package, set text to "Belum ada gambar"
+                        label_image_paket.setText("Belum ada gambar");
+                        imagePath = "Belum ada gambar";
+                    }
+
+                    // Add imagePath to rowData
+                    rowData.add(imagePath);
+
                     dt.addRow(rowData);
                 }
             }
-        } catch (SQLException e) {
-            dbConnect.logger.log(Level.SEVERE, "Database connection error", e);
+        } catch (SQLException | IOException e) {
+            dbConnect.logger.log(Level.SEVERE, "Error loading packages", e);
         }
     }
 
@@ -148,7 +198,7 @@ public class Soal extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         id_paket_t = new javax.swing.JTextField();
         save_button = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
+        update_btn_paket = new javax.swing.JButton();
         resetButton = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         p_search = new javax.swing.JTextField();
@@ -158,7 +208,9 @@ public class Soal extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         deskripsi_paket = new javax.swing.JTextArea();
         jLabel11 = new javax.swing.JLabel();
-        jButton13 = new javax.swing.JButton();
+        delete_paket_btn = new javax.swing.JButton();
+        upload_img_paket = new javax.swing.JButton();
+        label_image_paket = new javax.swing.JLabel();
 
         jMenu1.setText("jMenu1");
 
@@ -458,13 +510,15 @@ public class Soal extends javax.swing.JFrame {
 
         tabel_paket.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Id", "Nama Paket", "Deskripsi"
+                "Id", "Nama Paket", "Deskripsi", "Foto Paket Belajar"
             }
         ));
+        tabel_paket.setDragEnabled(true);
         tabel_paket.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabel_paketMouseClicked(evt);
@@ -472,12 +526,17 @@ public class Soal extends javax.swing.JFrame {
         });
         jScrollPane7.setViewportView(tabel_paket);
 
-        panel_paket.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 350, 1000, 270));
+        panel_paket.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 430, 1000, 300));
 
         jLabel4.setText("Id Paket (AI)");
         panel_paket.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 50, -1, -1));
 
         id_paket_t.setEditable(false);
+        id_paket_t.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                id_paket_tActionPerformed(evt);
+            }
+        });
         panel_paket.add(id_paket_t, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 70, 50, 40));
 
         save_button.setBackground(new java.awt.Color(0, 0, 255));
@@ -490,15 +549,15 @@ public class Soal extends javax.swing.JFrame {
         });
         panel_paket.add(save_button, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, -1, -1));
 
-        jButton8.setBackground(new java.awt.Color(0, 255, 255));
-        jButton8.setForeground(new java.awt.Color(255, 255, 255));
-        jButton8.setText("update");
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        update_btn_paket.setBackground(new java.awt.Color(0, 255, 255));
+        update_btn_paket.setForeground(new java.awt.Color(255, 255, 255));
+        update_btn_paket.setText("update");
+        update_btn_paket.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                update_btn_paketActionPerformed(evt);
             }
         });
-        panel_paket.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 300, -1, -1));
+        panel_paket.add(update_btn_paket, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 300, -1, -1));
 
         resetButton.setBackground(new java.awt.Color(153, 153, 153));
         resetButton.setForeground(new java.awt.Color(255, 255, 255));
@@ -524,10 +583,10 @@ public class Soal extends javax.swing.JFrame {
                 p_searchKeyReleased(evt);
             }
         });
-        panel_paket.add(p_search, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 300, 230, 40));
+        panel_paket.add(p_search, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 380, 230, 40));
 
         jLabel9.setText("Cari");
-        panel_paket.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 280, -1, -1));
+        panel_paket.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 360, -1, -1));
         panel_paket.add(nama_paket_paket1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 230, 40));
 
         jLabel10.setText("Deskripsi");
@@ -542,15 +601,26 @@ public class Soal extends javax.swing.JFrame {
         jLabel11.setText("Masukan Nama Paket");
         panel_paket.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, -1, -1));
 
-        jButton13.setBackground(new java.awt.Color(255, 0, 0));
-        jButton13.setForeground(new java.awt.Color(255, 255, 255));
-        jButton13.setText("Delete");
-        jButton13.addActionListener(new java.awt.event.ActionListener() {
+        delete_paket_btn.setBackground(new java.awt.Color(255, 0, 0));
+        delete_paket_btn.setForeground(new java.awt.Color(255, 255, 255));
+        delete_paket_btn.setText("Delete");
+        delete_paket_btn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton13ActionPerformed(evt);
+                delete_paket_btnActionPerformed(evt);
             }
         });
-        panel_paket.add(jButton13, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 300, -1, -1));
+        panel_paket.add(delete_paket_btn, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 300, -1, -1));
+
+        upload_img_paket.setText("Upload Gambar");
+        upload_img_paket.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                upload_img_paketActionPerformed(evt);
+            }
+        });
+        panel_paket.add(upload_img_paket, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 290, 130, 40));
+
+        label_image_paket.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        panel_paket.add(label_image_paket, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 10, 500, 270));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -567,7 +637,7 @@ public class Soal extends javax.swing.JFrame {
             .addComponent(panel_main, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 90, 900, 610));
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 90, 1000, 610));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -668,33 +738,61 @@ public class Soal extends javax.swing.JFrame {
         String name = nama_paket_paket1.getText();
         String deskripsi = deskripsi_paket.getText();
 
-        success = dbConnect.addPackage(name, deskripsi);
+        try {
+            InputStream image = new FileInputStream(new File(pathImgPaket));
+            success = dbConnect.addPackage(name, deskripsi, image);
 
-        if (!name.isEmpty()) {
-            if (success) {
-                tbload();
+            if (!name.isEmpty() || !deskripsi.isEmpty()) {
+                if (success) {
+                    tbload();
 //                JOptionPane.showMessageDialog(null, "Package added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                System.out.print("berhasil");
-            } else {
-                System.out.print("Error");
+                    System.out.print("berhasil");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Kolom nama dan deskripsi haru di isi !", "Warning", JOptionPane.INFORMATION_MESSAGE);
+                }
             }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Soal.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-//        if (!name.isEmpty()) {
-//            JOptionPane.showMessageDialog(this, "Berhasil membuat Paket " + name, "Success", JOptionPane.INFORMATION_MESSAGE);
-//            addPackage(name);
-//        }
     }//GEN-LAST:event_save_buttonActionPerformed
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+    private void update_btn_paketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_btn_paketActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton8ActionPerformed
+
+//        Get the cureent of the fiel of table coy
+        DefaultTableModel tbmodel = (DefaultTableModel) tabel_paket.getModel();
+        if (tabel_paket.getSelectedRowCount() == 1) {
+            int selectedRow = tabel_paket.getSelectedRow();
+            String id = id_paket_t.getText();
+            String name = nama_paket_paket1.getText();
+            String deskripsi = deskripsi_paket.getText();
+
+            // call edit if true
+            int packageId = Integer.parseInt(id);
+            success = editPackage(packageId, name, deskripsi);
+
+            if (success) {
+                // if its true renew data di db
+                tbmodel.setValueAt(id, selectedRow, 0);
+                tbmodel.setValueAt(name, selectedRow, 1);
+                tbmodel.setValueAt(deskripsi, selectedRow, 2);
+                JOptionPane.showMessageDialog(null, "Package updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Failed to update package!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select a row to update.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }//GEN-LAST:event_update_btn_paketActionPerformed
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
         // TODO add your handling code here:
         nama_paket_paket1.setText("");
         deskripsi_paket.setText("");
         id_paket_t.setText("");
+        label_image_paket.setIcon(null);
+        label_image_paket.setText("");
     }//GEN-LAST:event_resetButtonActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -771,9 +869,23 @@ public class Soal extends javax.swing.JFrame {
             id_paket_t.setText(id);
             nama_paket_paket1.setText(name);
             deskripsi_paket.setText(deskripsi);
+
+            // Ambil path gambar dari rowData di kolom ketiga (indeks kolom 2)
+            String imagePath = tabel_paket.getValueAt(i, 3).toString();
+
+            ImageIcon icon = null;
+            if (imagePath != null) {
+                icon = new ImageIcon(imagePath);
+            }
+//            // Buat ImageIcon dari path gambar
+//            ImageIcon icon = new ImageIcon(imagePath);
+
+            // Set ImageIcon ke label_image_paket
+            label_image_paket.setIcon(icon);
         } else {
             System.out.print("ErrorCO");
         }
+
 
     }//GEN-LAST:event_tabel_paketMouseClicked
 
@@ -781,9 +893,58 @@ public class Soal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_p_searchActionPerformed
 
-    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
+    private void delete_paket_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delete_paket_btnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton13ActionPerformed
+
+        DefaultTableModel tbmodel = (DefaultTableModel) tabel_paket.getModel();
+        if (tabel_paket.getSelectedRowCount() == 1) {
+            int selectedRow = tabel_paket.getSelectedRow();
+            String id = tbmodel.getValueAt(selectedRow, 0).toString();
+            String name = tbmodel.getValueAt(selectedRow, 1).toString();
+
+            // confirmation delete
+            int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this package " + name + " ? ", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (response == JOptionPane.YES_OPTION) {
+                // class the func from db connect
+                int packageId = Integer.parseInt(id);
+                success = deletePackage(packageId);
+
+                if (success) {
+                    // if delete success delte from DB
+                    tbmodel.removeRow(selectedRow);
+                    JOptionPane.showMessageDialog(null, "Package deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Failed to delete package!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select a row to delete.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }//GEN-LAST:event_delete_paket_btnActionPerformed
+
+    private void upload_img_paketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upload_img_paketActionPerformed
+        // TODO add your handling code here:
+        JFileChooser image = new JFileChooser();
+        image.showOpenDialog(null);
+
+        File file = image.getSelectedFile();
+        String path = file.getAbsolutePath();
+        try {
+            BufferedImage bufi = ImageIO.read(new File(path));
+            Image img = bufi.getScaledInstance(500, 270, Image.SCALE_SMOOTH);
+            ImageIcon icon = new ImageIcon(img);
+            label_image_paket.setIcon(icon);
+
+            pathImgPaket = path;
+        } catch (IOException ex) {
+            Logger.getLogger(Soal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_upload_img_paketActionPerformed
+
+    private void id_paket_tActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_id_paket_tActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_id_paket_tActionPerformed
 
     /**
      * @param args the command line arguments
@@ -824,19 +985,18 @@ public class Soal extends javax.swing.JFrame {
     private javax.swing.JLabel LogoutBtn1;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel dashboard;
+    private javax.swing.JButton delete_paket_btn;
     private javax.swing.JTextArea deskripsi_paket;
     private javax.swing.JTextField id_paket_t;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton8;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
@@ -872,6 +1032,7 @@ public class Soal extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField7;
+    private javax.swing.JLabel label_image_paket;
     private javax.swing.JLabel materi_p;
     private javax.swing.JTextField nama_paket_paket1;
     private javax.swing.JLabel p_paket;
@@ -884,5 +1045,7 @@ public class Soal extends javax.swing.JFrame {
     private javax.swing.JButton save_button;
     private javax.swing.JLabel soal1;
     private javax.swing.JTable tabel_paket;
+    private javax.swing.JButton update_btn_paket;
+    private javax.swing.JButton upload_img_paket;
     // End of variables declaration//GEN-END:variables
 }
