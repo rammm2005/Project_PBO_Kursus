@@ -4,6 +4,9 @@
  */
 package dbConnect;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.sql.Connection;
@@ -56,6 +59,29 @@ public class dbConnect {
         }
     }
 
+//    public static boolean updatePackage(int packageId, String newDeskripsi, InputStream newImage, String name) {
+//        String sql = "UPDATE packages SET deskripsi = ?, image = ?, name = ? WHERE id = ?";
+//
+//        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//            pstmt.setString(1, newDeskripsi);
+//            pstmt.setBinaryStream(2, newImage);
+//            pstmt.set(3, name);
+//            pstmt.setInt(4, packageId);
+//            int rowsAffected = pstmt.executeUpdate(); // Mengembalikan jumlah baris yang terpengaruh oleh perintah SQL
+//            if (rowsAffected > 0) {
+//                JOptionPane.showMessageDialog(null, "Package updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+//                return true;
+//            } else {
+//                JOptionPane.showMessageDialog(null, "Failed to update package! Package not found.", "Error", JOptionPane.ERROR_MESSAGE);
+//                return false;
+//            }
+//        } catch (SQLException e) {
+//            logger.log(Level.SEVERE, "Failed to update package", e);
+//            JOptionPane.showMessageDialog(null, "Failed to update package! See logs for details.", "Error", JOptionPane.ERROR_MESSAGE);
+//            return false;
+//        }
+//    }
+
     public static boolean editPackage(int id, String packageName, String deskripsi) {
         String sql = "UPDATE packages SET name = ?, deskripsi = ? WHERE id = ?";
 
@@ -74,7 +100,21 @@ public class dbConnect {
             return false;
         }
     }
-
+//    public static boolean editPackage(int id, String packageName, String deskripsi, String imagePath) {
+//        String sql = "UPDATE packages SET name = ?, deskripsi = ?, image = ? WHERE id = ?";
+//
+//        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//            pstmt.setString(1, packageName);
+//            pstmt.setString(2, deskripsi);
+//
+//            pstmt.setInt(4, id);
+//            int rowsAffected = pstmt.executeUpdate(); // Mengembalikan jumlah baris yang terpengaruh oleh perintah SQL
+//            return rowsAffected > 0;
+//        } catch (SQLException e) {
+//            logger.log(Level.SEVERE, "Failed to update package", e);
+//            return false;
+//        }
+//    }
     public static boolean deletePackage(int id) {
         String sql = "DELETE FROM packages WHERE id = ?";
 

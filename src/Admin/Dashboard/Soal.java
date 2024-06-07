@@ -784,6 +784,8 @@ public class Soal extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Please select a row to update.", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
+
+
     }//GEN-LAST:event_update_btn_paketActionPerformed
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
@@ -870,23 +872,46 @@ public class Soal extends javax.swing.JFrame {
             nama_paket_paket1.setText(name);
             deskripsi_paket.setText(deskripsi);
 
-            // Ambil path gambar dari rowData di kolom ketiga (indeks kolom 2)
+            // Ambil path gambar dari rowData di kolom keempat (indeks kolom 3)
             String imagePath = tabel_paket.getValueAt(i, 3).toString();
 
-            ImageIcon icon = null;
-            if (imagePath != null) {
-                icon = new ImageIcon(imagePath);
+            if (imagePath != null && !imagePath.isEmpty()) {
+                File imgFile = new File(imagePath);
+                if (imgFile.exists()) {
+                    try {
+                        // Baca gambar dari file
+                        BufferedImage bufi = ImageIO.read(imgFile);
+
+                        // Dapatkan dimensi label
+                        int labelWidth = label_image_paket.getWidth();
+                        int labelHeight = label_image_paket.getHeight();
+
+                        // Ubah ukuran gambar sesuai dengan dimensi label
+                        Image img = bufi.getScaledInstance(labelWidth, labelHeight, Image.SCALE_SMOOTH);
+                        ImageIcon icon = new ImageIcon(img);
+
+                        // Set ImageIcon ke label_image_paket
+                        label_image_paket.setIcon(icon);
+                        label_image_paket.setText("");  // Hapus teks dari label jika ada gambar
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.out.println("Error: Gambar tidak dapat dibaca.");
+                        label_image_paket.setIcon(null);
+                        label_image_paket.setText("Gambar tidak dapat dibaca.");
+                    }
+                } else {
+                    // Jika file gambar tidak ada
+                    label_image_paket.setIcon(null);
+                    label_image_paket.setText("Tidak ada gambar di upload.");
+                }
+            } else {
+                // Jika path gambar null atau kosong, hapus ikon dari label dan set teks
+                label_image_paket.setIcon(null);
+                label_image_paket.setText("Tidak ada gambar tersedia.");
             }
-//            // Buat ImageIcon dari path gambar
-//            ImageIcon icon = new ImageIcon(imagePath);
-
-            // Set ImageIcon ke label_image_paket
-            label_image_paket.setIcon(icon);
         } else {
-            System.out.print("ErrorCO");
+            System.out.print("Error: Tidak ada baris yang dipilih.");
         }
-
-
     }//GEN-LAST:event_tabel_paketMouseClicked
 
     private void p_searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_p_searchActionPerformed
