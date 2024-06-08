@@ -2,6 +2,19 @@ package User.Pages;
 
 import User.Auth.LoginSiswa;
 import User.Auth.UserSession;
+import dbConnect.dbConnect;
+//import java.awt.BorderLayout;
+//import java.awt.Dimension;
+//import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import static javax.swing.BoxLayout.PAGE_AXIS;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -9,7 +22,6 @@ import javax.swing.JOptionPane;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author Rama Dev
@@ -19,10 +31,86 @@ public class Kursus extends javax.swing.JFrame {
     /**
      * Creates new form Kursus
      */
-    public Kursus(JFrame frame){
+    public Kursus(JFrame frame) {
         frame.dispose();
         this.setVisible(true);
         initComponents();
+        displayData();
+    }
+
+    private void displayData() {
+        ArrayList<dbConnect.Data> dataList = dbConnect.getDataFromDB();
+
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.X_AXIS));
+
+        for (dbConnect.Data data : dataList) {
+            addDataToPanel(data);
+            contentPanel.add(Box.createVerticalStrut(10));
+        }
+
+        // Refresh panel
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
+
+    private void addDataToPanel(dbConnect.Data data) {
+        JPanel dataPanel = new JPanel();
+        dataPanel.setLayout(new BoxLayout(dataPanel,PAGE_AXIS)); // Mengatur layout menjadi BoxLayout vertikal
+
+        int padding = 10;
+        dataPanel.setBorder(BorderFactory.createEmptyBorder(padding, padding, padding, padding));
+
+        JLabel labelName = new JLabel("<html><b>" + data.title + "</b></html>");
+        labelName.setFont(labelName.getFont().deriveFont(Font.BOLD, 16)); 
+
+        JLabel imageLabel = new JLabel();
+        JLabel labelDeskripsi = new JLabel();
+
+        if (data.description != null && !data.description.isEmpty()) {
+            // Jika deskripsi tidak kosong, set deskripsi
+            labelDeskripsi.setText("<html><div style='width: 250px;'>" + data.description + "</div></html>");
+        } else {
+            // Jika deskripsi kosong, set teks "Belum ada deskripsi"
+            labelDeskripsi.setText("<html><div style='width: 250px;'>Belum ada deskripsi</div></html>");
+        }
+
+        labelDeskripsi.setVerticalAlignment(SwingConstants.TOP); // Set label deskripsi agar teksnya mulai dari atas
+        labelDeskripsi.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0)); // Padding atas
+
+        if (data.image != null) {
+            // Mengatur ukuran gambar sesuai kebutuhan jika data.image tidak null
+            ImageIcon scaledImage = new ImageIcon(data.image.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH));
+            imageLabel.setIcon(scaledImage);
+        } else {
+            String imagePath = "/assets/paket/no-img.jpg";
+            InputStream inputStream = getClass().getResourceAsStream(imagePath);
+            if (inputStream != null) {
+                // Jika gambar default ditemukan
+                try {
+                    BufferedImage img = ImageIO.read(inputStream);
+                    ImageIcon defaultImageIcon = new ImageIcon(img.getScaledInstance(250, 250, Image.SCALE_SMOOTH));
+                    imageLabel.setIcon(defaultImageIcon);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                // Jika gambar default tidak ditemukan
+                System.err.println("Gambar default tidak ditemukan: " + imagePath);
+            }
+        }
+
+        // Menambahkan komponen ke dalam dataPanel dengan tata letak vertikal
+        dataPanel.add(imageLabel);
+        dataPanel.add(labelName);
+        dataPanel.add(labelDeskripsi);
+
+        contentPanel.add(dataPanel);
     }
 
     /**
@@ -36,7 +124,6 @@ public class Kursus extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         LogoutBtn = new javax.swing.JLabel();
-        panel_main = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -48,6 +135,9 @@ public class Kursus extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
+        controlPanel = new javax.swing.JScrollPane();
+        contentPanel = new javax.swing.JPanel();
+        jLabel13 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -65,13 +155,10 @@ public class Kursus extends javax.swing.JFrame {
         });
         getContentPane().add(LogoutBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(1400, 40, -1, -1));
 
-        panel_main.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        getContentPane().add(panel_main, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 180, 1100, 600));
-
         jLabel12.setFont(new java.awt.Font("Comic Sans MS", 1, 24)); // NOI18N
-        jLabel12.setText("Halaman Kursus");
+        jLabel12.setText("Listing Kursus Tersedia");
         jLabel12.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 70, -1, -1));
+        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 140, -1, -1));
 
         jLabel4.setFont(new java.awt.Font("Comic Sans MS", 0, 12)); // NOI18N
         jLabel4.setText("Jelajahi dan Temukan Kursus Terbaik mu, dan Uji Coba Quiznya");
@@ -151,6 +238,16 @@ public class Kursus extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 280, 790));
 
+        contentPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        controlPanel.setViewportView(contentPanel);
+
+        getContentPane().add(controlPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 170, 1080, 610));
+
+        jLabel13.setFont(new java.awt.Font("Comic Sans MS", 1, 24)); // NOI18N
+        jLabel13.setText("Halaman Kursus");
+        jLabel13.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 70, -1, -1));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -225,10 +322,13 @@ public class Kursus extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LogoutBtn;
+    private javax.swing.JPanel contentPanel;
+    private javax.swing.JScrollPane controlPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel4;
@@ -237,6 +337,5 @@ public class Kursus extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel panel_main;
     // End of variables declaration//GEN-END:variables
 }

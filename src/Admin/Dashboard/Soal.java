@@ -318,7 +318,7 @@ public class Soal extends javax.swing.JFrame {
         });
         getContentPane().add(profile, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 10, -1, -1));
 
-        panel_main.setBackground(new java.awt.Color(0, 0, 255));
+        panel_main.setBackground(new java.awt.Color(0, 204, 0));
         panel_main.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         panel_main.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -759,7 +759,30 @@ public class Soal extends javax.swing.JFrame {
     private void update_btn_paketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_btn_paketActionPerformed
         // TODO add your handling code here:
 
-//        Get the cureent of the fiel of table coy
+        //        Get the cureent of the fiel of table coy
+        //        DefaultTableModel tbmodel = (DefaultTableModel) tabel_paket.getModel();
+        //        if (tabel_paket.getSelectedRowCount() == 1) {
+        //            int selectedRow = tabel_paket.getSelectedRow();
+        //            String id = id_paket_t.getText();
+        //            String name = nama_paket_paket1.getText();
+        //            String deskripsi = deskripsi_paket.getText();
+        //
+        //            // call edit if true
+        //            int packageId = Integer.parseInt(id);
+        //            success = editPackage(packageId, name, deskripsi);
+        //
+        //            if (success) {
+        //                // if its true renew data di db
+        //                tbmodel.setValueAt(id, selectedRow, 0);
+        //                tbmodel.setValueAt(name, selectedRow, 1);
+        //                tbmodel.setValueAt(deskripsi, selectedRow, 2);
+        //                JOptionPane.showMessageDialog(null, "Package updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        //            } else {
+        //                JOptionPane.showMessageDialog(null, "Failed to update package!", "Error", JOptionPane.ERROR_MESSAGE);
+        //            }
+        //        } else {
+        //            JOptionPane.showMessageDialog(null, "Please select a row to update.", "Error", JOptionPane.ERROR_MESSAGE);
+        //        }   
         DefaultTableModel tbmodel = (DefaultTableModel) tabel_paket.getModel();
         if (tabel_paket.getSelectedRowCount() == 1) {
             int selectedRow = tabel_paket.getSelectedRow();
@@ -767,25 +790,28 @@ public class Soal extends javax.swing.JFrame {
             String name = nama_paket_paket1.getText();
             String deskripsi = deskripsi_paket.getText();
 
-            // call edit if true
-            int packageId = Integer.parseInt(id);
-            success = editPackage(packageId, name, deskripsi);
+            if (!name.isEmpty() && !deskripsi.isEmpty() && pathImgPaket != null && !pathImgPaket.isEmpty()) {
+                try {
+                    InputStream image = new FileInputStream(new File(pathImgPaket));
+                    boolean success = dbConnect.editPackage(Integer.parseInt(id), name, deskripsi, image);
 
-            if (success) {
-                // if its true renew data di db
-                tbmodel.setValueAt(id, selectedRow, 0);
-                tbmodel.setValueAt(name, selectedRow, 1);
-                tbmodel.setValueAt(deskripsi, selectedRow, 2);
-                JOptionPane.showMessageDialog(null, "Package updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    if (success) {
+                        // Jika update berhasil, perbarui tampilan tabel
+                        tbload();
+                        JOptionPane.showMessageDialog(null, "Package updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Failed to update package!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Soal.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null, "File not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             } else {
-                JOptionPane.showMessageDialog(null, "Failed to update package!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Name, description, and image must be provided!", "Warning", JOptionPane.WARNING_MESSAGE);
             }
         } else {
             JOptionPane.showMessageDialog(null, "Please select a row to update.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-
-
-
     }//GEN-LAST:event_update_btn_paketActionPerformed
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
@@ -921,21 +947,45 @@ public class Soal extends javax.swing.JFrame {
     private void delete_paket_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delete_paket_btnActionPerformed
         // TODO add your handling code here:
 
+//        DefaultTableModel tbmodel = (DefaultTableModel) tabel_paket.getModel();
+//        if (tabel_paket.getSelectedRowCount() == 1) {
+//            int selectedRow = tabel_paket.getSelectedRow();
+//            String id = tbmodel.getValueAt(selectedRow, 0).toString();
+//            String name = tbmodel.getValueAt(selectedRow, 1).toString();
+//
+//            // confirmation delete
+//            int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this package " + name + " ? ", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+//            if (response == JOptionPane.YES_OPTION) {
+//                // class the func from db connect
+//                int packageId = Integer.parseInt(id);
+//                success = deletePackage(packageId);
+//
+//                if (success) {
+//                    // if delete success delte from DB
+//                    tbmodel.removeRow(selectedRow);
+//                    JOptionPane.showMessageDialog(null, "Package deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+//                } else {
+//                    JOptionPane.showMessageDialog(null, "Failed to delete package!", "Error", JOptionPane.ERROR_MESSAGE);
+//                }
+//            }
+//        } else {
+//            JOptionPane.showMessageDialog(null, "Please select a row to delete.", "Error", JOptionPane.ERROR_MESSAGE);
+//        }
         DefaultTableModel tbmodel = (DefaultTableModel) tabel_paket.getModel();
         if (tabel_paket.getSelectedRowCount() == 1) {
             int selectedRow = tabel_paket.getSelectedRow();
             String id = tbmodel.getValueAt(selectedRow, 0).toString();
             String name = tbmodel.getValueAt(selectedRow, 1).toString();
 
-            // confirmation delete
+            // Konfirmasi penghapusan
             int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this package " + name + " ? ", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (response == JOptionPane.YES_OPTION) {
-                // class the func from db connect
+                // Panggil fungsi deletePackage dari dbConnect
                 int packageId = Integer.parseInt(id);
-                success = deletePackage(packageId);
+                success = dbConnect.deletePackage(packageId);
 
                 if (success) {
-                    // if delete success delte from DB
+                    // Jika penghapusan berhasil, hapus juga baris dari tabel
                     tbmodel.removeRow(selectedRow);
                     JOptionPane.showMessageDialog(null, "Package deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 } else {

@@ -4,6 +4,8 @@
  */
 package dbConnect;
 
+import java.awt.Image;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,8 +14,11 @@ import java.sql.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -27,6 +32,19 @@ public class dbConnect {
     private static final String USER = "root";
     private static final String PASSWORD = "";
 
+    public static class Data {
+
+        public String title;
+        public String description;
+        public ImageIcon image;
+
+        Data(String title, String description, ImageIcon image) {
+            this.title = title;
+            this.description = description;
+            this.image = image;
+        }
+    }
+
     public static Connection connect() {
         try {
             return DriverManager.getConnection(URL, USER, PASSWORD);
@@ -35,6 +53,36 @@ public class dbConnect {
             logger.log(Level.SEVERE, "An SQL exception occurred", e);
             return null;
         }
+    }
+
+    public static ArrayList<Data> getDataFromDB() {
+        ArrayList<Data> dataList = new ArrayList<>();
+        String sql = "SELECT name, deskripsi, image FROM packages";
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                String title = rs.getString("name");
+                String description = rs.getString("deskripsi");
+                byte[] imgBytes = rs.getBytes("image");
+
+                // Convert byte array to ImageIcon
+                ImageIcon imageIcon = null;
+                if (imgBytes != null) {
+                    ByteArrayInputStream bis = new ByteArrayInputStream(imgBytes);
+                    Image image = ImageIO.read(bis);
+                    imageIcon = new ImageIcon(image);
+                }
+
+                Data data = new Data(title, description, imageIcon);
+                dataList.add(data);
+            }
+        } catch (SQLException | IOException e) {
+            JOptionPane.showMessageDialog(null, "Failed to retrieve data from database! See logs for details.", "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+
+        return dataList;
     }
 
     public static boolean addPackage(String packageName, String deskripsi, InputStream image) {
@@ -81,39 +129,56 @@ public class dbConnect {
 //            return false;
 //        }
 //    }
-
-    public static boolean editPackage(int id, String packageName, String deskripsi) {
-        String sql = "UPDATE packages SET name = ?, deskripsi = ? WHERE id = ?";
+//    public static boolean editPackage(int id, String packageName, String deskripsi) {
+//        String sql = "UPDATE packages SET name = ?, deskripsi = ? WHERE id = ?";
+//
+//        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//            pstmt.setString(1, packageName);
+//            pstmt.setString(2, deskripsi);
+//            pstmt.setInt(3, id);
+//            int rowsAffected = pstmt.executeUpdate(); // Mengembalikan jumlah baris yang terpengaruh oleh perintah SQL
+//            if (rowsAffected > 0) {
+//                return true;
+//            } else {
+//                return false;
+//            }
+//        } catch (SQLException e) {
+//            logger.log(Level.SEVERE, "Failed to update package", e);
+//            return false;
+//        }
+//    }
+    public static boolean editPackage(int id, String packageName, String deskripsi, InputStream image) {
+        String sql = "UPDATE packages SET name = ?, deskripsi = ?, image = ? WHERE id = ?";
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, packageName);
             pstmt.setString(2, deskripsi);
-            pstmt.setInt(3, id);
-            int rowsAffected = pstmt.executeUpdate(); // Mengembalikan jumlah baris yang terpengaruh oleh perintah SQL
-            if (rowsAffected > 0) {
-                return true;
-            } else {
-                return false;
-            }
+            pstmt.setBinaryStream(3, image); // Set InputStream untuk gambar
+            pstmt.setInt(4, id);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Failed to update package", e);
             return false;
         }
     }
-//    public static boolean editPackage(int id, String packageName, String deskripsi, String imagePath) {
-//        String sql = "UPDATE packages SET name = ?, deskripsi = ?, image = ? WHERE id = ?";
+
+//    public static boolean deletePackage(int id) {
+//        String sql = "DELETE FROM packages WHERE id = ?";
 //
 //        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//            pstmt.setString(1, packageName);
-//            pstmt.setString(2, deskripsi);
-//
-//            pstmt.setInt(4, id);
-//            int rowsAffected = pstmt.executeUpdate(); // Mengembalikan jumlah baris yang terpengaruh oleh perintah SQL
-//            return rowsAffected > 0;
+//            pstmt.setInt(1, id);
+//            int rowsAffected = pstmt.executeUpdate();
+//            if (rowsAffected > 0) {
+//                return true;
+//            } else {
+//                return false;
+//            }
 //        } catch (SQLException e) {
-//            logger.log(Level.SEVERE, "Failed to update package", e);
+//            logger.log(Level.SEVERE, "Failed to Delete package", e);
 //            return false;
 //        }
+//
 //    }
     public static boolean deletePackage(int id) {
         String sql = "DELETE FROM packages WHERE id = ?";
@@ -122,6 +187,8 @@ public class dbConnect {
             pstmt.setInt(1, id);
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
+                // Jika paket berhasil dihapus dari database, hapus juga gambar terkait jika ada
+                deleteImagePaket(id);
                 return true;
             } else {
                 return false;
@@ -130,7 +197,21 @@ public class dbConnect {
             logger.log(Level.SEVERE, "Failed to Delete package", e);
             return false;
         }
+    }
 
+    private static void deleteImagePaket(int id) {
+        String imagePath = "src/assets/paket/" + id + ".png"; 
+
+        File file = new File(imagePath);
+        if (file.exists()) {
+            if (file.delete()) {
+                logger.log(Level.INFO, "Image deleted successfully: " + imagePath);
+            } else {
+                logger.log(Level.WARNING, "Failed to delete image: " + imagePath);
+            }
+        } else {
+            logger.log(Level.WARNING, "Image not found: " + imagePath);
+        }
     }
 
 //    public static void selectPackage(String packageName) {
