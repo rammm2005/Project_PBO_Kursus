@@ -877,12 +877,48 @@ public class Soal extends javax.swing.JFrame {
                     v.add(rs.getString(2));
                     v.add(rs.getString(3));
 
+                    Blob imageBlob = rs.getBlob(4);
+                    String imagePath = "src/assets/paket/" + rs.getString(1) + ".png";
+
+                    File imageFile = new File(imagePath);
+
+                    if (imageFile.exists()) {
+                        // Use existing image file to create ImageIcon
+                        BufferedImage image = ImageIO.read(imageFile);
+                        ImageIcon icon = new ImageIcon(image);
+                        label_image_paket.setIcon(icon);
+                    } else if (imageBlob != null) {
+                        // Save image from Blob to file
+                        try (InputStream inputStream = imageBlob.getBinaryStream(); FileOutputStream fos = new FileOutputStream(imageFile)) {
+                            byte[] buffer = new byte[1024];
+                            int bytesRead;
+                            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                                fos.write(buffer, 0, bytesRead);
+                            }
+                        }
+
+                        // Create ImageIcon from the saved image file
+                        BufferedImage image = ImageIO.read(imageFile);
+                        ImageIcon icon = new ImageIcon(image);
+                        label_image_paket.setIcon(icon);
+                    } else {
+                        // No image found for the package, set text to "Belum ada gambar"
+                        label_image_paket.setText("Belum ada gambar");
+                        imagePath = "Belum ada gambar";
+                    }
+
+                    // Add imagePath to rowData
+                    v.add(imagePath);
+
                     dt.addRow(v);
                 }
+//                   tbload();
             }
 
         } catch (SQLException e) {
             dbConnect.logger.log(Level.SEVERE, "Database connection error", e);
+        } catch (IOException ex) {
+            Logger.getLogger(Soal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_p_searchKeyReleased
 
@@ -995,6 +1031,7 @@ public class Soal extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(null, "Please select a row to delete.", "Error", JOptionPane.ERROR_MESSAGE);
         }
+
 
     }//GEN-LAST:event_delete_paket_btnActionPerformed
 
