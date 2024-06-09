@@ -158,12 +158,12 @@ public class Kursus extends javax.swing.JFrame {
         jLabel12.setFont(new java.awt.Font("Comic Sans MS", 1, 24)); // NOI18N
         jLabel12.setText("Listing Kursus Tersedia");
         jLabel12.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 140, -1, -1));
+        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 130, -1, -1));
 
         jLabel4.setFont(new java.awt.Font("Comic Sans MS", 0, 12)); // NOI18N
         jLabel4.setText("Jelajahi dan Temukan Kursus Terbaik mu, dan Uji Coba Quiznya");
         jLabel4.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 100, -1, -1));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 80, -1, -1));
 
         jPanel1.setBackground(new java.awt.Color(0, 51, 153));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -246,7 +246,7 @@ public class Kursus extends javax.swing.JFrame {
         jLabel13.setFont(new java.awt.Font("Comic Sans MS", 1, 24)); // NOI18N
         jLabel13.setText("Halaman Kursus");
         jLabel13.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 70, -1, -1));
+        getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 50, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
