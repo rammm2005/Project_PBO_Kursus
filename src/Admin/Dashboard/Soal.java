@@ -333,6 +333,7 @@ public class Soal extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.setRowHeight(30);
         jScrollPane1.setViewportView(jTable1);
 
         panel_main.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 350, 990, 270));
@@ -436,6 +437,7 @@ public class Soal extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable5.setRowHeight(30);
         jScrollPane9.setViewportView(jTable5);
 
         panel_materi.add(jScrollPane9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 430, 1030, 280));
@@ -519,6 +521,7 @@ public class Soal extends javax.swing.JFrame {
             }
         ));
         tabel_paket.setDragEnabled(true);
+        tabel_paket.setRowHeight(30);
         tabel_paket.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabel_paketMouseClicked(evt);
