@@ -33,6 +33,7 @@ public class LeaderBoard extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel5 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -47,6 +48,27 @@ public class LeaderBoard extends javax.swing.JFrame {
         LogoutBtn = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         panel_main = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jProgressBar1 = new javax.swing.JProgressBar();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        jLabel27 = new javax.swing.JLabel();
+
+        jLabel5.setText("jLabel5");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -148,7 +170,124 @@ public class LeaderBoard extends javax.swing.JFrame {
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1290, 40, -1, -1));
 
         panel_main.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        getContentPane().add(panel_main, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 180, 1100, 600));
+        panel_main.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, -1, -1));
+
+        jProgressBar1.setBackground(new java.awt.Color(0, 204, 204));
+        jProgressBar1.setForeground(new java.awt.Color(0, 204, 204));
+        jProgressBar1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(0, 102, 204), new java.awt.Color(0, 51, 153), java.awt.Color.white, new java.awt.Color(0, 153, 255)));
+        panel_main.add(jProgressBar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 150, 430, 50));
+
+        jTable1.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
+        jTable1.setForeground(new java.awt.Color(0, 204, 204));
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"1",  new Integer(100), "RyanGanteng", "IT"},
+                {"2",  new Integer(99), "Poleng13", "IT"},
+                {"3",  new Integer(98), "Saizul mendunia", "IT"},
+                {"4",  new Integer(97), "eka", "IT"},
+                {"5",  new Integer(96), "ucup", "IT"},
+                {"6",  new Integer(94), "sisna", "IT"},
+                {"7",  new Integer(91), "rama", "IT"},
+                {"8",  new Integer(88), "R", "IT"},
+                {"9",  new Integer(87), "Y", "IT"},
+                {"10",  new Integer(86), "A", "IT"},
+                {"11",  new Integer(84), "N", "IT"},
+                {"12",  new Integer(83), "W", "IT"},
+                {"13",  new Integer(81), "P", "IT"},
+                {"14",  new Integer(80), "W", "IT"},
+                {"15",  new Integer(75), "R", "IT"},
+                {"16",  new Integer(74), "T", "IT"},
+                {"17",  new Integer(73), "U", "IT"},
+                {"18",  new Integer(72), "I", "IT"},
+                {"19",  new Integer(71), "O", "IT"},
+                {"20",  new Integer(66), "P", "IT"},
+                {"21",  new Integer(65), "A", "IT"},
+                {"22",  new Integer(64), "S", "IT"},
+                {"23",  new Integer(55), "D", "IT"},
+                {"24",  new Integer(54), "F", "IT"},
+                {"25",  new Integer(53), "G", "IT"},
+                {"26",  new Integer(33), "H", "IT"},
+                {"27",  new Integer(32), "J", "IT"},
+                {"28",  new Integer(31), "J", "IT"},
+                {"29",  new Integer(21), "K", "IT"},
+                {"30",  new Integer(20), "L", null}
+            },
+            new String [] {
+                "RANK", "POINT", "NAMA", "STUDY"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+
+        panel_main.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 70, 420, 530));
+
+        jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/Desain_tanpa_judul_3_-removebg-preview_1.png"))); // NOI18N
+        panel_main.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(-120, 60, 360, 160));
+
+        jLabel16.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel16.setText("RYAN");
+        panel_main.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 70, 80, 20));
+
+        jLabel17.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(102, 153, 255));
+        jLabel17.setText("Level 100 | Rank #50");
+        panel_main.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 110, -1, -1));
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/1-removebg-preview.png"))); // NOI18N
+        panel_main.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, 300, 200));
+
+        jLabel19.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/2-removebg-preview.png"))); // NOI18N
+        panel_main.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 190, 300, 140));
+
+        jPanel2.setBackground(new java.awt.Color(153, 204, 255));
+        jPanel2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(0, 102, 255), new java.awt.Color(0, 51, 204), java.awt.Color.white, new java.awt.Color(0, 204, 255)));
+        jPanel2.setForeground(new java.awt.Color(255, 255, 255));
+
+        jLabel18.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
+        jLabel18.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel18.setText("LEADERBOARD");
+        jPanel2.add(jLabel18);
+
+        panel_main.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 10, 190, 50));
+
+        jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/paket/4.png"))); // NOI18N
+        panel_main.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 400, -1, -1));
+
+        jLabel21.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/paket/4.png"))); // NOI18N
+        panel_main.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 400, -1, -1));
+        panel_main.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 360, -1, -1));
+
+        jLabel23.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
+        jLabel23.setText("EXP 199 / 250");
+        panel_main.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 110, 150, 40));
+
+        jLabel24.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
+        jLabel24.setText("Pencarian Terakhir");
+        panel_main.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, -1, -1));
+
+        jLabel25.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
+        jLabel25.setForeground(new java.awt.Color(0, 0, 204));
+        jLabel25.setText("Telah");
+        panel_main.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 220, -1, -1));
+
+        jLabel26.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
+        jLabel26.setForeground(new java.awt.Color(0, 0, 204));
+        jLabel26.setText("Menyelesaikan  ");
+        panel_main.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 240, -1, -1));
+
+        jLabel27.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
+        jLabel27.setForeground(new java.awt.Color(153, 204, 255));
+        jLabel27.setText("0 kelas | 2 Games");
+        panel_main.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 270, -1, -1));
+
+        getContentPane().add(panel_main, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 130, 1130, 600));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -228,14 +367,34 @@ public class LeaderBoard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JProgressBar jProgressBar1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     private javax.swing.JPanel panel_main;
     // End of variables declaration//GEN-END:variables
 }
