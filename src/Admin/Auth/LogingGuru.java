@@ -180,10 +180,10 @@ public class LogingGuru extends javax.swing.JFrame {
         String email = emailInput.getText();
         String password = new String(passInput.getPassword());
 
-        if (email.isEmpty() || email.isBlank()) {
+        if (email.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Email tidak boleh kosong", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-        } else if (password.isEmpty() || password.isBlank()) {
+        } else if (password.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Password tidak boleh kosong", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
