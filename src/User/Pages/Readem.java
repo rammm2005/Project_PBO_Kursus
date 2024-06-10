@@ -43,6 +43,27 @@ public class Readem extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         panel_main = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel21 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        jPanel9 = new javax.swing.JPanel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -120,7 +141,117 @@ public class Readem extends javax.swing.JFrame {
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 280, 790));
 
         panel_main.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        getContentPane().add(panel_main, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 180, 1100, 600));
+
+        jPanel3.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel17.setFont(new java.awt.Font("Comic Sans MS", 1, 48)); // NOI18N
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel17.setText("475");
+        jPanel3.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 8, 150, 90));
+
+        jLabel19.setFont(new java.awt.Font("Comic Sans MS", 0, 14)); // NOI18N
+        jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel19.setText("Points available");
+        jPanel3.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 100, 150, -1));
+
+        panel_main.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 30, 160, 130));
+
+        jPanel2.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel2.setFont(new java.awt.Font("Comic Sans MS", 1, 48)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("35");
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 160, 90));
+
+        jLabel16.setFont(new java.awt.Font("Comic Sans MS", 0, 14)); // NOI18N
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel16.setText("Points value");
+        jPanel2.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 100, 160, -1));
+
+        panel_main.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 30, 160, 130));
+
+        jLabel3.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Search");
+        panel_main.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 220, 100, -1));
+
+        jPanel4.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel5.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel4.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 360, 220, 210));
+
+        jPanel6.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel7.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel6.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 360, 220, 210));
+
+        jPanel4.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 360, 220, 210));
+
+        jLabel21.setFont(new java.awt.Font("Comic Sans MS", 1, 48)); // NOI18N
+        jLabel21.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel21.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/avatar.png"))); // NOI18N
+        jLabel21.setMaximumSize(new java.awt.Dimension(512, 512));
+        jPanel4.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 220, -1));
+
+        jLabel18.setFont(new java.awt.Font("Comic Sans MS", 0, 18)); // NOI18N
+        jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel18.setText("Avatar");
+        jPanel4.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 220, 220, -1));
+
+        panel_main.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 300, 220, 260));
+
+        jPanel8.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel22.setFont(new java.awt.Font("Comic Sans MS", 1, 48)); // NOI18N
+        jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel22.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/bg_points.jpg"))); // NOI18N
+        jLabel22.setMaximumSize(new java.awt.Dimension(512, 512));
+        jPanel8.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 220, 200));
+
+        jLabel20.setFont(new java.awt.Font("Comic Sans MS", 0, 18)); // NOI18N
+        jLabel20.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel20.setText("Background");
+        jPanel8.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 220, 220, -1));
+
+        panel_main.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 300, 220, 260));
+
+        jPanel9.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel13.setFont(new java.awt.Font("Comic Sans MS", 0, 18)); // NOI18N
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel13.setText("Fonts");
+        jPanel9.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 220, 220, -1));
+
+        jLabel5.setFont(new java.awt.Font("Comic Sans MS", 1, 48)); // NOI18N
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/fonts.jpg"))); // NOI18N
+        jLabel5.setMaximumSize(new java.awt.Dimension(512, 512));
+        jPanel9.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 220, 200));
+
+        panel_main.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 300, 220, 260));
+
+        jLabel23.setFont(new java.awt.Font("Comic Sans MS", 1, 24)); // NOI18N
+        jLabel23.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel23.setText("Readem your points");
+        panel_main.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 170, 570, -1));
+
+        jTextField1.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+        panel_main.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 220, 470, -1));
+
+        getContentPane().add(panel_main, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 180, 1100, 600));
 
         jLabel12.setFont(new java.awt.Font("Comic Sans MS", 1, 24)); // NOI18N
         jLabel12.setText("Readem Point");
@@ -177,6 +308,10 @@ public class Readem extends javax.swing.JFrame {
         new Kursus(this);
     }//GEN-LAST:event_jLabel7MouseClicked
 
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -218,14 +353,35 @@ public class Readem extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel panel_main;
     // End of variables declaration//GEN-END:variables
 }
