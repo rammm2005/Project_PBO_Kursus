@@ -3,9 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/java_proyek/Project_PBO_Kursus/src/User/Auth/LoginSiswa.java</file>
             <file>file:/C:/java_proyek/Project_PBO_Kursus/src/User/Pages/LeaderBoard.java</file>
             <file>file:/C:/java_proyek/Project_PBO_Kursus/src/Admin/Auth/LogingGuru.java</file>
+=======
+            <file>file:/C:/Users/Rama%20Dev/OneDrive/Documents/NetBeansProjects/Course_Online/src/User/Pages/Kursus.java</file>
+            <file>file:/C:/Users/Rama%20Dev/OneDrive/Documents/NetBeansProjects/Course_Online/src/User/Pages/Dashboard.java</file>
+            <file>file:/C:/Users/Rama%20Dev/OneDrive/Documents/NetBeansProjects/Course_Online/src/deleteIconTabel/actionButton.java</file>
+            <file>file:/C:/Users/Rama%20Dev/OneDrive/Documents/NetBeansProjects/Course_Online/src/Admin/Dashboard/Materi_Paket.java</file>
+            <file>file:/C:/Users/Rama%20Dev/OneDrive/Documents/NetBeansProjects/Course_Online/src/Admin/Dashboard/Soal.java</file>
+            <file>file:/C:/Users/Rama%20Dev/OneDrive/Documents/NetBeansProjects/Course_Online/src/Admin/Dashboard/Dashboard_Admin.java</file>
+>>>>>>> 9699306e85041397cc2416ad26ffc257a96abcee
         </group>
     </open-files>
 </project-private>
