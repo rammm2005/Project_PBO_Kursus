@@ -170,7 +170,7 @@ public class Dashboard extends javax.swing.JFrame {
         jPanel2.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, -1));
 
         panel_main.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jPanel2.add(panel_main, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, 830, 600));
+        jPanel2.add(panel_main, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 830, 600));
 
         LogoutBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/switch.png"))); // NOI18N
         LogoutBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));

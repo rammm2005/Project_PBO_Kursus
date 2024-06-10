@@ -200,7 +200,7 @@ public class dbConnect {
     }
 
     private static void deleteImagePaket(int id) {
-        String imagePath = "src/assets/paket/" + id + ".png"; 
+        String imagePath = "src/assets/paket/" + id + ".png";
 
         File file = new File(imagePath);
         if (file.exists()) {
@@ -211,6 +211,48 @@ public class dbConnect {
             }
         } else {
             logger.log(Level.WARNING, "Image not found: " + imagePath);
+        }
+    }
+
+    public static int getTotalGuruFromDatabase() {
+        int total = 0;
+        try (Connection connection = connect()) {
+            String query = "SELECT COUNT(*) FROM guru";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                total = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+    public static int getTotalSiswaFromDatabase() {
+        int total = 0;
+        try (Connection connection = connect()) {
+            String query = "SELECT COUNT(*) FROM users";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                total = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+    public static boolean deleteUser(int id) {
+        String sql = "DELETE FROM users WHERE id = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 

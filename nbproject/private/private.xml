@@ -3,10 +3,28 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/HP/Documents/TUGAS%20SISNA/kuliah/PBO/Project_PBO_Kursus/src/User/Pages/LeaderBoard.java</file>
             <file>file:/C:/Users/HP/Documents/TUGAS%20SISNA/kuliah/PBO/Project_PBO_Kursus/src/User/Pages/Dashboard.java</file>
             <file>file:/C:/Users/HP/Documents/TUGAS%20SISNA/kuliah/PBO/Project_PBO_Kursus/src/User/Pages/Kursus.java</file>
             <file>file:/C:/Users/HP/Documents/TUGAS%20SISNA/kuliah/PBO/Project_PBO_Kursus/src/User/Pages/Readem.java</file>
+=======
+<<<<<<< HEAD
+            <file>file:/C:/java_proyek/Project_PBO_Kursus/src/User/Auth/LoginSiswa.java</file>
+            <file>file:/C:/java_proyek/Project_PBO_Kursus/src/User/Pages/LeaderBoard.java</file>
+            <file>file:/C:/java_proyek/Project_PBO_Kursus/src/Admin/Auth/LogingGuru.java</file>
+=======
+            <file>file:/C:/Users/Rama%20Dev/OneDrive/Documents/NetBeansProjects/Course_Online/src/User/Pages/Kursus.java</file>
+            <file>file:/C:/Users/Rama%20Dev/OneDrive/Documents/NetBeansProjects/Course_Online/src/User/Pages/Dashboard.java</file>
+            <file>file:/C:/Users/Rama%20Dev/OneDrive/Documents/NetBeansProjects/Course_Online/src/deleteIconTabel/actionButton.java</file>
+            <file>file:/C:/Users/Rama%20Dev/OneDrive/Documents/NetBeansProjects/Course_Online/src/Admin/Dashboard/Materi_Paket.java</file>
+            <file>file:/C:/Users/Rama%20Dev/OneDrive/Documents/NetBeansProjects/Course_Online/src/Admin/Dashboard/Dashboard_Admin.java</file>
+<<<<<<< HEAD
+            <file>file:/C:/Users/Rama%20Dev/OneDrive/Documents/NetBeansProjects/Course_Online/src/dbConnect/dbConnect.java</file>
+=======
+>>>>>>> 9699306e85041397cc2416ad26ffc257a96abcee
+>>>>>>> fefaa486cbc8c0f3453268fe240797f8bf6daa34
+>>>>>>> d0e307b85a6163f2ff4b9739bad183713dc78e60
         </group>
     </open-files>
 </project-private>
